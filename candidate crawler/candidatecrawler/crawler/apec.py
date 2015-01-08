@@ -14,7 +14,7 @@ from twisted.python.util import println
 
 class ApecItem(Item):
     urlCV = Field()
-    println("bouh")
+    print("bouh")
 
 
 class CVSpider(BaseSpider):
@@ -39,11 +39,11 @@ class CVSpider(BaseSpider):
         hxs = Selector(response)
 
         rows = hxs.xpath('//a')
-        println(rows.__sizeof__())
+        print(len(rows))
         for row in rows:
-            println("juste apres")
+            print("juste apres")
             item = ApecItem()
             url = row.extract()[0]
             item['urlCV'] = url
-            println("toto")
+            print("toto")
             yield item
