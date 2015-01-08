@@ -7,7 +7,7 @@ Created on 7 janv. 2015
 
 import os
 import datetime
-import http.client
+import httplib
 from xml.etree import ElementTree
 
 ### End of external modules importation ###
@@ -31,7 +31,7 @@ def ping_website(url):
     website_status = True
 
     try:
-        conn = http.client.HTTPConnection(url)
+        conn = httplib.HTTPConnection(url)
         conn.request("GET",url)
     except:
         website_status = False
@@ -51,6 +51,20 @@ def xml_reader(input_file, entry):
     xmlfile.close()
 
     return askedfield
+
+def html_reader(domainName,uri):
+    """Read an HTML page"""
+    conn = httplib.HTTPConnection(domainName)
+    conn.request("GET",uri)
+    r1 = conn.getresponse()
+
+    if r1.reason != "OK":
+        print("{0} - {1}".format(r1.status, r1.reason))
+        print(r1.getheader('Location'))
+
+    htmlpage = r1.read()
+
+    return htmlpage
 
 def xml_writer(input_file, output_file, entry_value_dict, backup=True):
     """Write datas to an XML file"""
