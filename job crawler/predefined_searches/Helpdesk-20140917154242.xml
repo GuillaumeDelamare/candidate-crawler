@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<profile>
+    <name>Helpdesk</name>
+    <aerocontact>True</aerocontact>
+    <aeroemploiformation>True</aeroemploiformation>
+    <apec>True</apec>
+    <caoemploi>False</caoemploi>
+    <indeed>True</indeed>
+    <monster>True</monster>
+    <poleemploi>True</poleemploi>
+    <regionjob>True</regionjob>
+    <domain>Info-Helpdesk</domain>
+    <keywords>informatique,helpdesk</keywords>
+    <queries>technicien,informatique,helpdesk</queries>
+    <region>Midi-Pyrénées</region>
+    <daterange>3</daterange>
+    <mailinglist>consept.toulouse@gmail.com,mga@consept.fr</mailinglist>
+</profile>
