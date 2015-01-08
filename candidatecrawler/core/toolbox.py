@@ -8,17 +8,11 @@ Created on 7 janv. 2015
 import os
 import datetime
 import http.client
-import xml.etree.ElementTree
+from xml.etree import ElementTree
 
 ### End of external modules importation ###
 
 ### Functions ###
-
-def timestamp():
-    """Create a unique time stamp"""
-    now = datetime.datetime.now().strftime("%Y%m%d%H%M%S") # We get current date and format it YYYYMMDDHHMMSS
-
-    return now
 
 def current_date():
     """Get current date, and format it"""
@@ -44,24 +38,11 @@ def ping_website(url):
 
     return website_status
 
-def html_reader(domainName,uri):
-    """Read an HTML page"""
-    conn = http.client.HTTPConnection(domainName)
-    conn.request("GET",uri)
-    r1 = conn.getresponse()
-
-    if r1.reason != "OK":
-        print("{0} - {1}".format(r1.status, r1.reason))
-        print(r1.getheader('Location'))
-
-    htmlpage = r1.read()
-
-    return htmlpage
 
 def xml_reader(input_file, entry):
     """Read datas from an XML file"""
     xmlfile = open(input_file, "r", encoding="utf-8")
-    tree = xml.etree.ElementTree.ElementTree()
+    tree = ElementTree.ElementTree()
     tree.parse(xmlfile)
     root = tree.getroot()
 
@@ -74,7 +55,7 @@ def xml_reader(input_file, entry):
 def xml_writer(input_file, output_file, entry_value_dict, backup=True):
     """Write datas to an XML file"""
     xmlfile = open(input_file, "r", encoding="utf-8")
-    tree = xml.etree.ElementTree.ElementTree()
+    tree = ElementTree.ElementTree()
     tree.parse(xmlfile)
     root = tree.getroot()
 

@@ -16,7 +16,7 @@ import bs4
 
 from candidatecrawler.core import toolbox, dbmanagement
 from candidatecrawler.crawler import poleemploi
-from _ast import keyword
+
 
 ### End of custom modules importation ###
 
@@ -27,7 +27,6 @@ class CandidateCrawlerCore(object):
         """Method to initialize variables"""
         self.configxmlfile = "Config.xml"
         self.dbfile = toolbox.xml_reader(self.configxmlfile, "dbfile").replace("\\","\\")      
-
         self.newlinks_list = []
         self.final_links_list = []
 
@@ -77,14 +76,13 @@ class CandidateCrawlerCore(object):
 #         self._values_initializer()
 
        
-    def findCandidate(self, keywords, region,):
-            runpoc = poleemploi.PoleemploiCrawler()
-            for link in runpoc.run_program(keywords=("dessinateur","catia"),daterange,region):
-                self.newlinks_list.append(link)
-        
-        self._links_management(self.newlinks_list, queries)
+    def findCandidate(self, keywords, region,db_management = False):
+        runpoc = poleemploi.PoleemploiCrawler()
+        for link in runpoc.run_program(keywords=("dessinateur","catia"),region):
+            self.newlinks_list.append(link)
+            self._links_management(self.newlinks_list)
 
-        if db_management == "True":
+        if db_management == True:
             dbmanagement.write_database(self.dbfile, self.final_links_list)
             dbmanagement.clean_database(self.dbfile, self.max_store_day)
             
