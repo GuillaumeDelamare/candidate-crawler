@@ -1,17 +1,10 @@
+# -*- coding: utf-8 -*-
+
 '''
 Created on 7 janv. 2015
 
 @author: Julie S
 '''
-
-
-# -*- coding: utf-8 -*-
-
-###############################################
-# Job Crawler - QT GUI                        #
-# Created by RIVES Yann                       #
-# Crawl some website to find interesting jobs #
-###############################################
 
 ### External modules importation ###
 
@@ -153,7 +146,7 @@ class CandidateCrawlerUI(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Candidate Crawler APEC", None))
         
-        self.keywords_label.setText(_translate("MainWindow", "Mots-clés de recherche", None))
+        self.keywords_label.setText(_translate("MainWindow", "Mots-cls de recherche", None))
         
         self.cv_number_label.setText(_translate("MainWindow", "Nombre de CVs", None))
         
@@ -161,7 +154,7 @@ class CandidateCrawlerUI(object):
 
         self.progression_label.setText(_translate("MainWindow", "Progression", None))
         
-        self.region_label.setText(_translate("MainWindow", "Région", None))
+        self.region_label.setText(_translate("MainWindow", "Rgion", None))
          
         self.mobilite_label.setText(_translate("MainWindow", "Mobilité", None))
         

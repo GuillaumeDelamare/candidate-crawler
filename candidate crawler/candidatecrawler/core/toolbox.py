@@ -41,7 +41,7 @@ def ping_website(url):
 
 def xml_reader(input_file, entry):
     """Read datas from an XML file"""
-    xmlfile = open(input_file, "r", encoding="utf-8")
+    xmlfile = open(input_file, "r")
     tree = ElementTree.ElementTree()
     tree.parse(xmlfile)
     root = tree.getroot()
@@ -68,7 +68,7 @@ def html_reader(domainName,uri):
 
 def xml_writer(input_file, output_file, entry_value_dict, backup=True):
     """Write datas to an XML file"""
-    xmlfile = open(input_file, "r", encoding="utf-8")
+    xmlfile = open(input_file, "r")
     tree = ElementTree.ElementTree()
     tree.parse(xmlfile)
     root = tree.getroot()
