@@ -23,8 +23,9 @@ from PyQt4 import QtCore, QtGui
 
 ### Custom modules importation ###
 from candidatecrawler.core import toolbox
+from candidatecrawler.view.window import About_window_ponctual
 
-#from jobcrawler.view.window import About_window_ponctual
+#from CandidateCrawler.view.window import About_window_ponctual
 
 ### End of custom modules importation ###
 
@@ -43,7 +44,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 ### Classes ###
-class JobCrawlerUI(object):
+class CandidateCrawlerUI(object):
     def setupUi(self, MainWindow):
         MainWindow.resize(300, 560)
         MainWindow.setMinimumSize(QtCore.QSize(300, 560))
@@ -113,7 +114,6 @@ class JobCrawlerUI(object):
         self.about_action = QtGui.QAction(MainWindow)
         self.exit_action = QtGui.QAction(MainWindow)
         self.reset_action = QtGui.QAction(MainWindow)
-        self.menuFichier.addAction(self.about_action)
         self.menuFichier.addAction(self.exit_action)
         self.menuEdition.addAction(self.reset_action)
         self.menuAide.addAction(self.about_action)
@@ -145,7 +145,7 @@ class JobCrawlerUI(object):
             self.disponibilite_combobox.addItem(element)
 
         # Action attached to buttons
-    #    self.about_action.triggered.connect(self.about_window)
+        self.about_action.triggered.connect(self.about_window)   #####################################
         self.exit_action.triggered.connect(self.close)
         self.reset_action.triggered.connect(self.reset)
         self.run_button.clicked.connect(self.run_program)
@@ -178,12 +178,12 @@ class JobCrawlerUI(object):
         self.reset_action.setText(_translate("MainWindow", "Initialiser", None))
 
 
-    # Methods for class JobCrawlerUI
+    # Methods for class CandidateCrawlerUI
 
-#     def about_window(self):
-#         """Method to generate About window"""
-#         self.aw = About_window_ponctual.AboutWindowGUI()
-#         self.aw.show()
+    def about_window(self):
+        """Method to generate About window"""
+        self.aw = About_window_ponctual.AboutWindowGUI()
+        self.aw.show()
 
     def reset(self):
         """Method to reset main window"""
@@ -249,7 +249,7 @@ class JobCrawlerUI(object):
 
                 return
 
-           # runapp = core.JobCrawlerCore()
+           # runapp = core.CandidateCrawlerCore()
     
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                  caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
@@ -269,9 +269,9 @@ class JobCrawlerUI(object):
             self.progression_text.append("Fin du programme\n")
             raise
 
-class JobCrawlerGUI(QtGui.QMainWindow, JobCrawlerUI):
+class CandidateCrawlerGUI(QtGui.QMainWindow, CandidateCrawlerUI):
     def __init__(self, parent=None):
-        super(JobCrawlerGUI, self).__init__(parent)
+        super(CandidateCrawlerGUI, self).__init__(parent)
         self.setupUi(self)
 
 ### End of Classes ###
@@ -280,7 +280,7 @@ class JobCrawlerGUI(QtGui.QMainWindow, JobCrawlerUI):
 
 if __name__=='__main__':
     app = QtGui.QApplication(sys.argv)
-    myapp = JobCrawlerGUI()
+    myapp = CandidateCrawlerGUI()
     myapp.show()
     app.exec_()
 
