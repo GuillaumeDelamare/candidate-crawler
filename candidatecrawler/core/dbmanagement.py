@@ -13,7 +13,7 @@ import csv
 
 ### Custom modules importation ###
 
-from jobcrawler.core import toolbox
+from candidatecrawler.core import toolbox
 
 ### End of custom modules importation ###
 
