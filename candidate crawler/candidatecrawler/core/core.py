@@ -7,7 +7,7 @@ Created on 7 janv. 2015
 ### External modules importation ###
 
 import re
-import urllib.request
+import urllib
 import bs4
 
 ### End of external modules importation ###
@@ -46,7 +46,7 @@ class CandidateCrawlerCore(object):
             error_code = False
 
             try:
-                htmlpage = urllib.request.urlopen(link).read()
+                htmlpage = urllib.urlopen(link).read()
                 soup = bs4.BeautifulSoup(htmlpage)
 
                 if queries[0] != "":
