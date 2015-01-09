@@ -47,6 +47,7 @@ class CVSpider(BaseSpider):
         yield FormRequest(url="http://recruteurs.apec.fr/CV/Candidapec/ApecCreateRequete.jsp?PEGA_HRSM_i<3consept_0_0_doSearchByCriteres=doSearchByCriteres"
                           ,method="POST"
                           ,formdata=self.formulaire
+                          #formdata = {'PEGA_TXFD_109774019_0_keywords':'catia' ,}
                           ,callback=self.parseD) #TODO rajouter les criteres
     
     def parseD(self,response):
