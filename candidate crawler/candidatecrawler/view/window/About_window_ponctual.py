@@ -10,6 +10,7 @@ Created on 8 janv. 2015
 
 import sys
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import QSizePolicy, QLayout, QBoxLayout
 
 ### End of external modules importation ###
 try:
@@ -32,6 +33,9 @@ class AboutWindowUI(object):
     def setupUi(self, AboutWindow):
         """GUI building for About window"""
         AboutWindow.resize(330, 330)
+        #layout = QBoxLayout(QBoxLayout.TopToBottom, None)
+        #AboutWindow.setLayout(layout)
+        AboutWindow.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
         AboutWindow.setMinimumSize(QtCore.QSize(330, 330))
         AboutWindow.setMaximumSize(QtCore.QSize(330, 330))
         self.centralwidget = QtGui.QWidget(AboutWindow)
