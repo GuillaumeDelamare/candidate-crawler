@@ -9,6 +9,7 @@ import os
 import datetime
 import httplib
 from xml.etree import ElementTree
+from ConfigParser import ConfigParser
 
 ### End of external modules importation ###
 
@@ -83,4 +84,11 @@ def xml_writer(input_file, output_file, entry_value_dict, backup=True):
         os.remove(input_file)
         os.rename(output_file,input_file)
 
+def get_apec_id():
+    """Recupere le login et le password dans le fichier config.init permmetant d'accéder au site de l'APEC
+    """
+    config = ConfigParser('./config.ini')
+    login = config.get('APEC','login')
+    password = config.get('APEC','password')
+    return login, password
 ### End of functions ###
