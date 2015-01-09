@@ -17,8 +17,10 @@ from PyQt4 import QtCore, QtGui
 ### Custom modules importation ###
 from candidatecrawler.core import toolbox
 from candidatecrawler.view.window import About_window_ponctual
-from PyQt4.QtGui import QIcon, QMessageBox
-from PyQt4.QtCore import QSize
+from PyQt4.QtGui import QIcon, QMessageBox, QListWidget, QListWidgetItem,\
+    QCheckBox, QStandardItemModel, QStandardItem
+from PyQt4.QtCore import QSize, QStringList, QVariant
+from PyQt4.Qt import Qt
 
 #from CandidateCrawler.view.window import About_window_ponctual
 
@@ -60,10 +62,9 @@ class CandidateCrawlerUI(object):
         self.region_label = QtGui.QLabel(self.centralwidget)
         self.region_label.setGeometry(QtCore.QRect(16, 65, 171, 20))
                         
-        self.region_combobox = QtGui.QComboBox(self.centralwidget)
-        self.region_combobox.setGeometry(QtCore.QRect(10, 85, 181, 22))
-        
-          
+        self.region_list = QtGui.QListView(self.centralwidget)
+        self.region_list.setGeometry(QtCore.QRect(10, 85, 181, 60))
+
         self.mobilite_label = QtGui.QLabel(self.centralwidget)
         self.mobilite_label.setGeometry(QtCore.QRect(16, 122, 171, 20))
                 
@@ -129,9 +130,15 @@ class CandidateCrawlerUI(object):
         salaire_list = tuple(toolbox.xml_reader(staticsxmlfile, "salaire").split(','))
         disponibilite_list = tuple(toolbox.xml_reader(staticsxmlfile, "disponibilite").split(','))
          
-        for element in region_list:
-            self.region_combobox.addItem(element)
-            
+        
+        self.model = QStandardItemModel(self.region_list)
+        for region in region_list:
+            item = QStandardItem(region)
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
+            self.model.appendRow(item)
+        self.region_list.setModel(self.model)
+         
         for element in mobilite_list:
             self.mobilite_combobox.addItem(element)
         
