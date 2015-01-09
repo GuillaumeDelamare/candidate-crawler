@@ -17,6 +17,8 @@ from PyQt4 import QtCore, QtGui
 ### Custom modules importation ###
 from candidatecrawler.core import toolbox
 from candidatecrawler.view.window import About_window_ponctual
+from PyQt4.QtGui import QIcon, QMessageBox
+from PyQt4.QtCore import QSize
 
 #from CandidateCrawler.view.window import About_window_ponctual
 
@@ -45,16 +47,22 @@ class CandidateCrawlerUI(object):
         self.centralwidget = QtGui.QWidget(MainWindow)
         
         self.keywords_label = QtGui.QLabel(self.centralwidget)
-        self.keywords_label.setGeometry(QtCore.QRect(16, 10, 151, 20))
+        self.keywords_label.move(16, 10)
          
+        self.keywords_help = QtGui.QPushButton(self.centralwidget)
+        self.keywords_help.setIcon(QIcon('./share/icon/point interrogation.png'))
+        self.keywords_help.setIconSize(QSize(10,10))
+        self.keywords_help.move(130, 5)
+        
         self.keywords_entry = QtGui.QLineEdit(self.centralwidget)
         self.keywords_entry.setGeometry(QtCore.QRect(10, 30, 281, 20))
          
         self.region_label = QtGui.QLabel(self.centralwidget)
         self.region_label.setGeometry(QtCore.QRect(16, 65, 171, 20))
-                
+                        
         self.region_combobox = QtGui.QComboBox(self.centralwidget)
         self.region_combobox.setGeometry(QtCore.QRect(10, 85, 181, 22))
+        
           
         self.mobilite_label = QtGui.QLabel(self.centralwidget)
         self.mobilite_label.setGeometry(QtCore.QRect(16, 122, 171, 20))
@@ -91,14 +99,9 @@ class CandidateCrawlerUI(object):
         self.run_button = QtGui.QPushButton(self.centralwidget)
         self.run_button.setGeometry(QtCore.QRect(16, 494, 270, 23))
         
-        
-        self.job_boards_label = QtGui.QLabel(self.centralwidget)
-        self.job_boards_label.setGeometry(QtCore.QRect(16, 10, 171, 16))
-        
-                
+    ###Barre de menu###           
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 300, 21))
         self.menuFichier = QtGui.QMenu(self.menubar)
         self.menuEdition = QtGui.QMenu(self.menubar)
         self.menuAide = QtGui.QMenu(self.menubar)
@@ -113,7 +116,8 @@ class CandidateCrawlerUI(object):
         self.menubar.addAction(self.menuFichier.menuAction())
         self.menubar.addAction(self.menuEdition.menuAction())
         self.menubar.addAction(self.menuAide.menuAction())
-
+        
+     
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -127,7 +131,7 @@ class CandidateCrawlerUI(object):
          
         for element in region_list:
             self.region_combobox.addItem(element)
-
+            
         for element in mobilite_list:
             self.mobilite_combobox.addItem(element)
         
@@ -138,15 +142,17 @@ class CandidateCrawlerUI(object):
             self.disponibilite_combobox.addItem(element)
 
         # Action attached to buttons
-        self.about_action.triggered.connect(self.about_window)   #####################################
+        ####################################################################
+        self.about_action.triggered.connect(self.about_window)   
         self.exit_action.triggered.connect(self.close)
         self.reset_action.triggered.connect(self.reset)
         self.run_button.clicked.connect(self.run_program)
+        self.keywords_help.clicked.connect(self.ouvrirDialogue)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Candidate Crawler APEC", None))
         
-        self.keywords_label.setText(_translate("MainWindow", "Mots-cls de recherche", None))
+        self.keywords_label.setText(_translate("MainWindow", "Mots-clés de recherche", None))
         
         self.cv_number_label.setText(_translate("MainWindow", "Nombre de CVs", None))
         
@@ -154,7 +160,7 @@ class CandidateCrawlerUI(object):
 
         self.progression_label.setText(_translate("MainWindow", "Progression", None))
         
-        self.region_label.setText(_translate("MainWindow", "Rgion", None))
+        self.region_label.setText(_translate("MainWindow", "Région", None))
          
         self.mobilite_label.setText(_translate("MainWindow", "Mobilité", None))
         
@@ -185,6 +191,11 @@ class CandidateCrawlerUI(object):
     def close(self):
         """Method to close main window"""
         self.close()
+    
+    def ouvrirDialogue(self):
+        print("coucou")
+        #TODO trUtf8 is deprecated
+        QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés en les séparant par des points-virgules."))
 
     def _entries_retriever(self):
         """Method to get user entries"""
