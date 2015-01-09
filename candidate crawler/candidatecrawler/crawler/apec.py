@@ -22,13 +22,15 @@ class CVSpider(BaseSpider):
     allowed_domains = ["recruteurs.apec.fr"]
     start_urls = ['http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin']
     
-    
-        
+    def __init__(self, login, password, critere):
+        self.critere = critere
+        self.login = login
+        self.password = password 
         
 
     def parse(self, response):
         
-        formdata = {'PEGA_IMBT_12928340_0_0_doLogin':'47179308','PEGA_IMBT_24835201_0_0_doLogin':'6KPA43V8'}
+        formdata = {'PEGA_IMBT_12928340_0_0_doLogin':login,'PEGA_IMBT_24835201_0_0_doLogin':password}
         print("parse")
         yield FormRequest(url="http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp",
                                   method="POST",
