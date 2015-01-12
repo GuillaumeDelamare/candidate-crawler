@@ -85,7 +85,7 @@ def xml_writer(input_file, output_file, entry_value_dict, backup=True):
         os.rename(output_file,input_file)
 
 def get_apec_id():
-    """Recupere le login et le password dans le fichier config.init permmetant d'accéder au site de l'APEC
+    """Recupere le login et le password dans le fichier config.init permmetant d'acceder au site de l'APEC
     """
     config = ConfigParser('./config.ini')
     login = config.get('APEC','login')
