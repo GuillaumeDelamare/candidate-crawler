@@ -4,10 +4,10 @@ Created on 8 janv. 2015
 @author: Pierre
 '''
 
-from scrapy.http import FormRequest
+from scrapy.http import FormRequest,Request
 from scrapy.item import Item, Field
 from scrapy.selector import Selector
-
+from scrapy.contrib.spiders.init import InitSpider
 from scrapy.spider import BaseSpider
 from _cffi_backend import callback
 from twisted.python.formmethod import Password
@@ -19,30 +19,58 @@ class ApecItem(Item):
     print("bouh")
 
 
-class CVSpider(BaseSpider):
+class CVSpider(InitSpider):
     name = "CVFinder"
     allowed_domains = ["recruteurs.apec.fr"]
     start_urls = ['http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin']
     password = ""
     login = ""
     critere = {}
+    login_page = 'http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin'
+    
+    def start_requests(self):
+        yield FormRequest(
+                      url="http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HRSM_704371172_0_0_doGoConsulterCV=doGoConsulterCV",
+                      formdata={'session_key': self.login, 'session_password': self.password},
+                      callback=self.check_login_response,
+                      dont_filter=True
+    )
+    
     
     def __init__(self, login, password, critere):
         self.critere = critere
         self.login = login
         self.password = password 
         
+    def login(self, response):
+    #"""Generate a login request."""
+        return FormRequest.from_response(response,
+            formdata={'session_key': self.login, 'session_password': self.password},
+            callback=self.check_login_response)
 
-    def parse(self, response):
-         
-        formdata = {'PEGA_IMBT_12928340_0_0_doLogin':self.login,'PEGA_IMBT_24835201_0_0_doLogin':self.password}
-        print("parse")
-        yield FormRequest(url="http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp",
-                                  method="GET",
-                                  formdata=formdata,
-                                  callback=self.parseB
-                                  )
-        
+    def check_login_response(self, response):
+    #"""Check the response returned by a login request to see if we aresuccessfully logged in."""
+        if "Sign Out" in response.body:
+            self.log("\n\n\nSuccessfully logged in. Let's start crawling!\n\n\n")
+        # Now the crawling can begin..
+            self.log('Hi, this is an item page! %s' % response.url)
+
+            return 
+
+        else:
+            self.log("\n\n\nFailed, Bad times :(\n\n\n")
+        # Something went wrong, we couldn't log in, so nothing happens.
+
+
+#     def parse(self, response):
+#          
+#         formdata = {'PEGA_IMBT_12928340_0_0_doLogin':self.login,'PEGA_IMBT_24835201_0_0_doLogin':self.password}
+#         print("parse")
+#         yield FormRequest(url="http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_379848439_0_0_doLogin=doLogin",
+#                                   formdata=formdata,
+#                                   callback=self.parseB
+#                                   )
+#         
 
     def parseB(self,response):
         print("parseB")
@@ -67,7 +95,7 @@ class CVSpider(BaseSpider):
         print(response)
         print(response)
         rows = hxs.xpath("//div[@id='chenillard']")
-        print(len(rows))
+        print(rows[0])
         print(len(rows))
         for row in rows:
             item = ApecItem()
