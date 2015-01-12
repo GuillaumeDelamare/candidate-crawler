@@ -17,8 +17,10 @@ from PyQt4 import QtCore, QtGui
 ### Custom modules importation ###
 from candidatecrawler.core import toolbox
 from candidatecrawler.view.window import About_window_ponctual
-from PyQt4.QtGui import QIcon, QMessageBox
-from PyQt4.QtCore import QSize
+from PyQt4.QtGui import QIcon, QMessageBox, QListWidget, QListWidgetItem,\
+    QCheckBox, QStandardItemModel, QStandardItem
+from PyQt4.QtCore import QSize, QStringList, QVariant
+from PyQt4.Qt import Qt
 
 #from CandidateCrawler.view.window import About_window_ponctual
 
@@ -41,9 +43,9 @@ except AttributeError:
 ### Classes ###
 class CandidateCrawlerUI(object):
     def setupUi(self, MainWindow):
-        MainWindow.resize(300, 560)
-        MainWindow.setMinimumSize(QtCore.QSize(300, 560))
-        MainWindow.setMaximumSize(QtCore.QSize(300, 560))
+        MainWindow.resize(300, 610)
+        MainWindow.setMinimumSize(QtCore.QSize(300, 610))
+        MainWindow.setMaximumSize(QtCore.QSize(300, 610))
         self.centralwidget = QtGui.QWidget(MainWindow)
         
         self.keywords_label = QtGui.QLabel(self.centralwidget)
@@ -60,44 +62,43 @@ class CandidateCrawlerUI(object):
         self.region_label = QtGui.QLabel(self.centralwidget)
         self.region_label.setGeometry(QtCore.QRect(16, 65, 171, 20))
                         
-        self.region_combobox = QtGui.QComboBox(self.centralwidget)
-        self.region_combobox.setGeometry(QtCore.QRect(10, 85, 181, 22))
-        
-          
+        self.region_list = QtGui.QListView(self.centralwidget)
+        self.region_list.setGeometry(QtCore.QRect(10, 85, 181, 55))
+
         self.mobilite_label = QtGui.QLabel(self.centralwidget)
-        self.mobilite_label.setGeometry(QtCore.QRect(16, 122, 171, 20))
+        self.mobilite_label.setGeometry(QtCore.QRect(16, 155, 171, 20))
                 
-        self.mobilite_combobox = QtGui.QComboBox(self.centralwidget)
-        self.mobilite_combobox.setGeometry(QtCore.QRect(10, 142, 181, 22))
+        self.mobilite_list = QtGui.QListView(self.centralwidget)
+        self.mobilite_list.setGeometry(QtCore.QRect(10, 175, 181, 55))
         
         self.salaire_label = QtGui.QLabel(self.centralwidget)
-        self.salaire_label.setGeometry(QtCore.QRect(16, 179, 171, 20))
+        self.salaire_label.setGeometry(QtCore.QRect(16, 245, 171, 20))
                 
         self.salaire_combobox = QtGui.QComboBox(self.centralwidget)
-        self.salaire_combobox.setGeometry(QtCore.QRect(10, 199, 181, 22))
+        self.salaire_combobox.setGeometry(QtCore.QRect(10, 265, 181, 20))
         
         self.disponibilite_label = QtGui.QLabel(self.centralwidget)
-        self.disponibilite_label.setGeometry(QtCore.QRect(16, 236, 171, 20))
+        self.disponibilite_label.setGeometry(QtCore.QRect(16, 300, 171, 20))
                 
         self.disponibilite_combobox = QtGui.QComboBox(self.centralwidget)
-        self.disponibilite_combobox.setGeometry(QtCore.QRect(10, 256, 181, 22))
+        self.disponibilite_combobox.setGeometry(QtCore.QRect(10, 320, 181, 20))
         
         self.cv_number_label = QtGui.QLabel(self.centralwidget)
-        self.cv_number_label.setGeometry(QtCore.QRect(16, 293, 171, 20))
+        self.cv_number_label.setGeometry(QtCore.QRect(16, 355, 171, 20))
         
         self.cv_number_entry = QtGui.QLineEdit(self.centralwidget)
-        self.cv_number_entry.setGeometry(QtCore.QRect(10, 313, 181, 20))
+        self.cv_number_entry.setGeometry(QtCore.QRect(10, 375, 181, 20))
         self.cv_number_entry.setInputMethodHints(QtCore.Qt.ImhNone)
         self.cv_number_entry.setText("50")
                  
         self.progression_label = QtGui.QLabel(self.centralwidget)
-        self.progression_label.setGeometry(QtCore.QRect(16, 348, 181, 20))
+        self.progression_label.setGeometry(QtCore.QRect(16, 410, 181, 20))
                     
         self.progression_text = QtGui.QTextBrowser(self.centralwidget)
-        self.progression_text.setGeometry(QtCore.QRect(10, 368, 281, 111))
+        self.progression_text.setGeometry(QtCore.QRect(10, 430, 281, 110))
         
         self.run_button = QtGui.QPushButton(self.centralwidget)
-        self.run_button.setGeometry(QtCore.QRect(16, 494, 270, 23))
+        self.run_button.setGeometry(QtCore.QRect(16, 555, 270, 23))
         
     ###Barre de menu###           
         MainWindow.setCentralWidget(self.centralwidget)
@@ -129,11 +130,22 @@ class CandidateCrawlerUI(object):
         salaire_list = tuple(toolbox.xml_reader(staticsxmlfile, "salaire").split(','))
         disponibilite_list = tuple(toolbox.xml_reader(staticsxmlfile, "disponibilite").split(','))
          
-        for element in region_list:
-            self.region_combobox.addItem(element)
-            
-        for element in mobilite_list:
-            self.mobilite_combobox.addItem(element)
+        
+        self.model = QStandardItemModel(self.region_list)
+        for region in region_list:
+            item = QStandardItem(region)
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
+            self.model.appendRow(item)
+        self.region_list.setModel(self.model)
+         
+        self.model2 = QStandardItemModel(self.mobilite_list)
+        for mobilite in mobilite_list:
+            item = QStandardItem(mobilite)
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
+            self.model2.appendRow(item)
+        self.mobilite_list.setModel(self.model2)
         
         for element in salaire_list:
             self.salaire_combobox.addItem(element)
