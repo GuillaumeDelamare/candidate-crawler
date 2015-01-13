@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Created on 8 janv. 2015
 
@@ -8,6 +10,8 @@ Created on 8 janv. 2015
 
 import sys
 from PyQt4 import QtCore, QtGui
+from PyQt4.QtGui import QSizePolicy, QLayout, QBoxLayout
+from candidatecrawler.core import toolbox
 
 ### End of external modules importation ###
 try:
@@ -29,39 +33,115 @@ except AttributeError:
 class AboutWindowUI(object):
     def setupUi(self, AboutWindow):
         """GUI building for About window"""
-        AboutWindow.resize(275, 240)
-        AboutWindow.setMinimumSize(QtCore.QSize(275, 230))
-        AboutWindow.setMaximumSize(QtCore.QSize(275, 240))
+        AboutWindow.resize(300, 200)
+        #AboutWindow.setLayout(QBoxLayout(QBoxLayout.TopToBottom, None))
+        AboutWindow.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
+        AboutWindow.setMinimumSize(QtCore.QSize(300, 200))
+        AboutWindow.setMaximumSize(QtCore.QSize(300, 200))
         self.centralwidget = QtGui.QWidget(AboutWindow)
-        self.title = QtGui.QLabel(self.centralwidget)
-        self.title.setGeometry(QtCore.QRect(10, 10, 261, 16))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        font.setBold(True)
-        font.setWeight(75)
-        self.title.setFont(font)
-        self.title.setAlignment(QtCore.Qt.AlignCenter)
-        self.description = QtGui.QLabel(self.centralwidget)
-        self.description.setGeometry(QtCore.QRect(10, 40, 251, 171))
-        self.description.setTextFormat(QtCore.Qt.RichText)
-        self.description.setScaledContents(False)
-        self.description.setWordWrap(True)
-        self.creator = QtGui.QLabel(self.centralwidget)
-        self.creator.setGeometry(QtCore.QRect(10, 214, 261, 20))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.creator.setFont(font)
-        self.creator.setAlignment(QtCore.Qt.AlignCenter)
+        self.qbox = QBoxLayout(QBoxLayout.TopToBottom, self.centralwidget)
+        self.centralwidget.setLayout(self.qbox)
+        
+        
+        ### Partie haute de la fenêtre###
+        self.boutton_parcourir = QtGui.QPushButton()
+        self.boutton_parcourir.setText(_translate("AboutWindow", "Parcourir", None))
+        
+        self.chemin = QtGui.QLineEdit(self.centralwidget)
+        
+        self.hbox_workspace = QtGui.QHBoxLayout()
+        self.hbox_workspace.addWidget(self.chemin)
+        self.hbox_workspace.addWidget(self.boutton_parcourir)
+        
+        self.workpace = QtGui.QLabel() 
+        self.workpace.setText(_translate("AboutWindow", "Répertoire de travail", None))
+        
+        self.vbox_workspace = QtGui.QVBoxLayout()
+        self.vbox_workspace.addWidget(self.workpace)
+        self.vbox_workspace.addLayout(self.hbox_workspace)
+        
+        
+        ###Partie centrale de la fenêtre###
+        self.apec = QtGui.QLabel() 
+        self.apec.setText(_translate("AboutWindow", "Identifiants APEC", None))
+        
+        
+        #######################
+        self.login = QtGui.QLabel() 
+        self.login.setText(_translate("AboutWindow", "E-mail/Identifiant", None))
+         
+        self.champ_login = QtGui.QLineEdit(self.centralwidget)
+         
+        self.hbox_login = QtGui.QHBoxLayout()
+        self.hbox_login.addWidget(self.login)
+        self.hbox_login.addWidget(self.champ_login)
+         
+        ##################
+        self.password = QtGui.QLabel() 
+        self.password.setText(_translate("AboutWindow", "Mot de passe", None))
+         
+        self.champ_password = QtGui.QLineEdit(self.centralwidget)
+         
+        self.hbox_password = QtGui.QHBoxLayout()
+        self.hbox_password.addWidget(self.password)
+        self.hbox_password.addWidget(self.champ_password)
+         
+        ##################
+        self.vbox_identifiants = QtGui.QVBoxLayout()
+        self.vbox_identifiants.addWidget(self.apec)
+        self.vbox_identifiants.addLayout(self.hbox_login)
+        self.vbox_identifiants.addLayout(self.hbox_password)
+         
+        ##################
+         
+         
+        ###Partie basse de la fenêtre### 
+        self.bouton_ok = QtGui.QPushButton() 
+        self.bouton_ok.setText(_translate("AboutWindow", "OK", None))
+        self.bouton_ok.clicked.connect(self.save)
+        #self.button_ok.accepted.connect(self.save)
+        
+        self.bouton_cancel = QtGui.QPushButton()
+        self.bouton_cancel.setText(_translate("AboutWindow", "Annuler", None))
+        self.bouton_cancel.clicked.connect(self.close)
+        
+        self.hbox_boutons = QtGui.QHBoxLayout()
+        self.hbox_boutons.addWidget(self.bouton_ok)
+        self.hbox_boutons.addWidget(self.bouton_cancel)  
+        
+        
+
+        ###Ajout à la fenêtre principale### 
+        
+        self.qbox.addLayout(self.vbox_workspace)
+        self.qbox.addLayout(self.vbox_identifiants)
+        self.qbox.addLayout(self.hbox_boutons)
+        
+        
         AboutWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(AboutWindow)
         QtCore.QMetaObject.connectSlotsByName(AboutWindow)
 
     def retranslateUi(self, AboutWindow):
-        AboutWindow.setWindowTitle(_translate("AboutWindow", "A propos", None))
-        self.title.setText(_translate("AboutWindow", "Candidate Crawler - A propos", None))
-        self.description.setText(_translate("AboutWindow", "<html><head/><body><p>Ce programme parcours le site de l'APEC pour trouver les meilleurs CVs, à partir d'une liste de critères.</p><p></p><p>Une fois la recherche effectuée, l\'utilisateur télécharge un fichier Zip contenant un tableau Excel récapitulatif ainsi que les CVs trouvés.</p><p>Le programme exploite une base CSV pour stoquer les CVs trouvés.</p></body></html>", None))
-        self.creator.setText(_translate("AboutWindow", "Créé par Jonathan SCHIEBEL, Julie SPENS, Laura TAPIAS, Pierre THEILHARD", None))
+        AboutWindow.setWindowTitle(_translate("AboutWindow", "Administration", None))
+        
+    def save(self):    
+                
+        write_dict = {}
+        write_dict["login"] = self.champ_login.text()
+        write_dict["password"] = self.champ_password.text()
+        write_dict["dbfile"] = self.chemin.text()
+        #write_dict["excludes"] = self.excludes_entry.text()
+ 
+        toolbox.xml_writer("./config.ini", "", write_dict, backup=True)
+ 
+        self.close()
+ 
+        
+
+    #######################  
+ 
 
 class AboutWindowGUI(QtGui.QMainWindow, AboutWindowUI):
     def __init__(self, parent=None):
@@ -79,3 +159,4 @@ if __name__=='__main__':
     app.exec_()
 
 ### End of Main program ###
+
