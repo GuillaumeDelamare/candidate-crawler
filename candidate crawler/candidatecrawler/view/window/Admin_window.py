@@ -10,7 +10,7 @@ Created on 8 janv. 2015
 
 import sys
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QSizePolicy, QLayout, QBoxLayout
+from PyQt4.QtGui import QSizePolicy, QBoxLayout, QGroupBox, QGridLayout
 from candidatecrawler.core import toolbox
 
 ### End of external modules importation ###
@@ -48,53 +48,34 @@ class AdminWindowUI(object):
         self.hbox_workspace.addWidget(self.chemin)
         self.hbox_workspace.addWidget(self.boutton_parcourir)
         
-        self.workpace = QtGui.QLabel() 
-        self.workpace.setText(_translate("AdminWindow", "Répertoire de travail", None))
-        
-        self.vbox_workspace = QtGui.QVBoxLayout()
-        self.vbox_workspace.addWidget(self.workpace)
-        self.vbox_workspace.addLayout(self.hbox_workspace)
-        self.vbox_workspace.setContentsMargins(0, 0, 0, 10)
+        self.groupBox_workspace = QGroupBox(_translate("AdminWindow", "Répertoire de travail", None))
+        self.groupBox_workspace.setLayout(self.hbox_workspace)
         
         ###Partie centrale de la fenêtre###
-        self.apec = QtGui.QLabel() 
-        self.apec.setText(_translate("AdminWindow", "Identifiants APEC", None))
-        
-        
-        #######################
         self.login = QtGui.QLabel() 
         self.login.setText(_translate("AdminWindow", "E-mail/Identifiant", None))
          
         self.champ_login = QtGui.QLineEdit(self.centralwidget)
-         
-        self.hbox_login = QtGui.QHBoxLayout()
-        self.hbox_login.addWidget(self.login)
-        self.hbox_login.addWidget(self.champ_login)
-         
-        ##################
+                  
         self.password = QtGui.QLabel() 
         self.password.setText(_translate("AdminWindow", "Mot de passe", None))
          
         self.champ_password = QtGui.QLineEdit(self.centralwidget)
-         
-        self.hbox_password = QtGui.QHBoxLayout()
-        self.hbox_password.addWidget(self.password)
-        self.hbox_password.addWidget(self.champ_password)
-         
-        ##################
-        self.vbox_identifiants = QtGui.QVBoxLayout()
-        self.vbox_identifiants.addWidget(self.apec)
-        self.vbox_identifiants.addLayout(self.hbox_login)
-        self.vbox_identifiants.addLayout(self.hbox_password)
-         
-        ##################
-         
+           
+        self.grid = QtGui.QGridLayout()
+        self.grid.addWidget(self.login, 0, 0)
+        self.grid.addWidget(self.champ_login, 0, 1)
+        self.grid.addWidget(self.password, 1, 0)
+        self.grid.addWidget(self.champ_password, 1, 1)
+        
+        self.groupBox_identifiants = QGroupBox(_translate("AdminWindow", "Identifiants APEC", None))
+        self.groupBox_identifiants.setLayout(self.grid)
+        
          
         ###Partie basse de la fenêtre### 
         self.bouton_ok = QtGui.QPushButton() 
         self.bouton_ok.setText(_translate("AdminWindow", "OK", None))
         self.bouton_ok.clicked.connect(self.save)
-        #self.button_ok.accepted.connect(self.save)
         
         self.bouton_cancel = QtGui.QPushButton()
         self.bouton_cancel.setText(_translate("AdminWindow", "Annuler", None))
@@ -104,11 +85,14 @@ class AdminWindowUI(object):
         self.hbox_boutons.addWidget(self.bouton_ok)
         self.hbox_boutons.addWidget(self.bouton_cancel)  
         
-        ###Ajout à la fenêtre principale### 
+        self.groupBox_boutons = QGroupBox()
+        self.groupBox_boutons.setLayout(self.hbox_boutons)
         
-        self.qbox.addLayout(self.vbox_workspace)
-        self.qbox.addLayout(self.vbox_identifiants)
-        self.qbox.addLayout(self.hbox_boutons)
+        
+        ###Ajout à la fenêtre principale### 
+        self.qbox.addWidget(self.groupBox_workspace)
+        self.qbox.addWidget(self.groupBox_identifiants)
+        self.qbox.addWidget(self.groupBox_boutons)
         
         AdminWindow.setCentralWidget(self.centralwidget)
 
@@ -122,9 +106,8 @@ class AdminWindowUI(object):
         toolbox.writeconfigvalue("APEC", "login", self.champ_login.text())
         toolbox.writeconfigvalue("APEC", "password", self.champ_password.text())
         toolbox.writeconfigvalue("GENERALPARAMETERS", "dbfile", self.chemin.text())
-        
         self.close()
-    #######################  
+      
  
 
 class AdminWindowGUI(QtGui.QMainWindow, AdminWindowUI):

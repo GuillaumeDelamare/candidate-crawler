@@ -18,11 +18,11 @@ from PyQt4 import QtCore, QtGui
 from candidatecrawler.core import toolbox
 from candidatecrawler.view.window import About_window
 from candidatecrawler.view.window import Admin_window
-from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem
+from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem, QBoxLayout,\
+    QSizePolicy
 from PyQt4.QtCore import QSize, QVariant
 from PyQt4.Qt import Qt
 
-#from CandidateCrawler.view.window import About_window
 
 ### End of custom modules importation ###
 
@@ -43,68 +43,128 @@ except AttributeError:
 ### Classes ###
 class CandidateCrawlerUI(object):
     def setupUi(self, MainWindow):
-        MainWindow.resize(300, 700)
-        MainWindow.setMinimumSize(QtCore.QSize(300, 700))
-        MainWindow.setMaximumSize(QtCore.QSize(300, 700))
         self.centralwidget = QtGui.QWidget(MainWindow)
-        
+        self.qbox = QBoxLayout(QBoxLayout.TopToBottom, self.centralwidget)
+        self.centralwidget.setLayout(self.qbox)
+               
+        #####Mots-clés###
         self.keywords_label = QtGui.QLabel(self.centralwidget)
-        self.keywords_label.move(16, 10)
+        self.keywords_label.setText(_translate("AdminWindow", "Mots-clés de recherche", None))
          
         self.keywords_help = QtGui.QPushButton(self.centralwidget)
         self.keywords_help.setIcon(QIcon('./share/icon/point interrogation.png'))
         self.keywords_help.setIconSize(QSize(10,10))
-        self.keywords_help.move(130, 5)
+        
+        self.hbox_keywords = QtGui.QHBoxLayout()
+        self.hbox_keywords.addWidget(self.keywords_label)
+        self.hbox_keywords.addWidget(self.keywords_help)
+        self.hbox_keywords.setContentsMargins(0, 0, 120, 0)
         
         self.keywords_entry = QtGui.QLineEdit(self.centralwidget)
-        self.keywords_entry.setGeometry(QtCore.QRect(10, 30, 281, 20))
+        
+        self.vbox_keywords = QtGui.QVBoxLayout()
+        self.vbox_keywords.addLayout(self.hbox_keywords)
+        self.vbox_keywords.addWidget(self.keywords_entry)
+        self.vbox_keywords.setContentsMargins(0, 0, 0, 10) 
          
+        ###Région### 
         self.region_label = QtGui.QLabel(self.centralwidget)
-        self.region_label.setGeometry(QtCore.QRect(16, 65, 171, 20))
+        self.region_label.setText(_translate("AdminWindow", "Région", None))
                         
         self.region_list = QtGui.QListView(self.centralwidget)
-        self.region_list.setGeometry(QtCore.QRect(10, 85, 181, 55))
-
-        self.mobilite_label = QtGui.QLabel(self.centralwidget)
-        self.mobilite_label.setGeometry(QtCore.QRect(16, 155, 171, 20))
-                
-        self.mobilite_list = QtGui.QListView(self.centralwidget)
-        self.mobilite_list.setGeometry(QtCore.QRect(10, 175, 181, 55))
         
+        self.vbox_region = QtGui.QVBoxLayout()
+        self.vbox_region.addWidget(self.region_label)
+        self.vbox_region.addWidget(self.region_list)
+        self.vbox_region.setContentsMargins(0, 0, 0, 10)
+        
+        ###Mobilité###
+        self.mobilite_label = QtGui.QLabel(self.centralwidget)
+        self.mobilite_label.setText(_translate("AdminWindow", "Mobilité", None))
+                        
+        self.mobilite_combobox = QtGui.QComboBox(self.centralwidget)
+        
+        self.vbox_mobilite = QtGui.QVBoxLayout()
+        self.vbox_mobilite.addWidget(self.mobilite_label)
+        self.vbox_mobilite.addWidget(self.mobilite_combobox)
+        self.vbox_mobilite.setContentsMargins(0, 0, 0, 10)
+        
+        ###Salaire###
         self.salaire_label = QtGui.QLabel(self.centralwidget)
-        self.salaire_label.setGeometry(QtCore.QRect(16, 245, 171, 20))
+        self.salaire_label.setText(_translate("AdminWindow", "Salaire", None))
                 
         self.salaire_combobox = QtGui.QComboBox(self.centralwidget)
-        self.salaire_combobox.setGeometry(QtCore.QRect(10, 265, 181, 20))
         
+        self.vbox_salaire = QtGui.QVBoxLayout()
+        self.vbox_salaire.addWidget(self.salaire_label)
+        self.vbox_salaire.addWidget(self.salaire_combobox)
+        self.vbox_salaire.setContentsMargins(0, 0, 0, 10)
+        
+        ###Disponibilité###
         self.disponibilite_label = QtGui.QLabel(self.centralwidget)
-        self.disponibilite_label.setGeometry(QtCore.QRect(16, 300, 171, 20))
+        self.disponibilite_label.setText(_translate("AdminWindow", "Disponibilité", None))
                 
         self.disponibilite_combobox = QtGui.QComboBox(self.centralwidget)
-        self.disponibilite_combobox.setGeometry(QtCore.QRect(10, 320, 181, 20))
         
+        self.vbox_disponibilite = QtGui.QVBoxLayout()
+        self.vbox_disponibilite.addWidget(self.disponibilite_label)
+        self.vbox_disponibilite.addWidget(self.disponibilite_combobox)
+        self.vbox_disponibilite.setContentsMargins(0, 0, 0, 10)
+        
+        ###Fraîcheur###
         self.fraicheur_label = QtGui.QLabel(self.centralwidget)
-        self.fraicheur_label.setGeometry(QtCore.QRect(16, 355, 171, 20))
-        
+        self.fraicheur_label.setText(_translate("AdminWindow", "Fraîcheur", None))
+                
         self.fraicheur_combobox = QtGui.QComboBox(self.centralwidget)
-        self.fraicheur_combobox.setGeometry(QtCore.QRect(10, 375, 181, 20))
         
+        self.vbox_fraicheur = QtGui.QVBoxLayout()
+        self.vbox_fraicheur.addWidget(self.fraicheur_label)
+        self.vbox_fraicheur.addWidget(self.fraicheur_combobox)
+        self.vbox_fraicheur.setContentsMargins(0, 0, 0, 10)
+        
+        ###Nombre de CVs###
         self.cv_number_label = QtGui.QLabel(self.centralwidget)
-        self.cv_number_label.setGeometry(QtCore.QRect(16, 410, 171, 20))
+        self.cv_number_label.setText(_translate("AdminWindow", "Nombre de CVs", None))
         
         self.cv_number_entry = QtGui.QLineEdit(self.centralwidget)
-        self.cv_number_entry.setGeometry(QtCore.QRect(10, 430, 181, 20))
         self.cv_number_entry.setInputMethodHints(QtCore.Qt.ImhNone)
         self.cv_number_entry.setText("50")
-                 
-        self.progression_label = QtGui.QLabel(self.centralwidget)
-        self.progression_label.setGeometry(QtCore.QRect(16, 465, 181, 20))
-                    
-        self.progression_text = QtGui.QTextBrowser(self.centralwidget)
-        self.progression_text.setGeometry(QtCore.QRect(10, 485, 281, 110))
         
+        self.vbox_cv_number = QtGui.QVBoxLayout()
+        self.vbox_cv_number.addWidget(self.cv_number_label)
+        self.vbox_cv_number.addWidget(self.cv_number_entry)
+        self.vbox_cv_number.setContentsMargins(0, 0, 0, 10)
+            
+        ###Progression###         
+        self.progression_label = QtGui.QLabel(self.centralwidget)
+        self.progression_label.setText(_translate("AdminWindow", "Progression", None))
+                     
+        self.progression_text = QtGui.QTextBrowser(self.centralwidget)
+        
+        self.vbox_progression = QtGui.QVBoxLayout()
+        self.vbox_progression.addWidget(self.progression_label)
+        self.vbox_progression.addWidget(self.progression_text)
+        self.vbox_progression.setContentsMargins(0, 0, 0, 10)
+        
+        ###Bouton de lancement###
         self.run_button = QtGui.QPushButton(self.centralwidget)
-        self.run_button.setGeometry(QtCore.QRect(16, 630, 270, 23))
+        self.run_button.setText(_translate("AdminWindow", "Lancer la recherche", None))
+        
+        
+        ###Ajout a la fenetre principale###
+        
+        self.qbox.addLayout(self.vbox_keywords)
+        self.qbox.addLayout(self.vbox_region)
+        self.qbox.addLayout(self.vbox_mobilite)
+        self.qbox.addLayout(self.vbox_salaire)
+        self.qbox.addLayout(self.vbox_disponibilite)
+        self.qbox.addLayout(self.vbox_fraicheur)
+        self.qbox.addLayout(self.vbox_cv_number)
+        self.qbox.addLayout(self.vbox_progression)
+        self.qbox.addWidget(self.run_button)
+        
+        MainWindow.setCentralWidget(self.centralwidget)
+
         
     ###Barre de menu###           
         MainWindow.setCentralWidget(self.centralwidget)
@@ -134,7 +194,7 @@ class CandidateCrawlerUI(object):
         staticsxmlfile = "statics.xml"
 
         region_list = tuple(toolbox.xml_reader(staticsxmlfile, "regions").split(','))
-        mobilite_list = tuple(toolbox.xml_reader(staticsxmlfile, "regions").split(','))
+        mobilite_list = tuple(toolbox.xml_reader(staticsxmlfile, "mobilite").split(','))
         salaire_list = tuple(toolbox.xml_reader(staticsxmlfile, "salaire").split(','))
         disponibilite_list = tuple(toolbox.xml_reader(staticsxmlfile, "disponibilite").split(','))
         fraicheur_list = tuple(toolbox.xml_reader(staticsxmlfile, "fraicheur").split(','))
@@ -148,13 +208,16 @@ class CandidateCrawlerUI(object):
             self.model.appendRow(item)
         self.region_list.setModel(self.model)
          
-        self.model2 = QStandardItemModel(self.mobilite_list)
-        for mobilite in mobilite_list:
-            item = QStandardItem(mobilite)
-            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
-            item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
-            self.model2.appendRow(item)
-        self.mobilite_list.setModel(self.model2)
+#         self.model2 = QStandardItemModel(self.mobilite_list)
+#         for mobilite in mobilite_list:
+#             item = QStandardItem(mobilite)
+#             item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+#             item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
+#             self.model2.appendRow(item)
+#         self.mobilite_list.setModel(self.model2)
+
+        for element in mobilite_list:
+            self.mobilite_combobox.addItem(element)
         
         for element in salaire_list:
             self.salaire_combobox.addItem(element)
@@ -175,19 +238,11 @@ class CandidateCrawlerUI(object):
         self.reset_action.triggered.connect(self.reset)
         self.run_button.clicked.connect(self.run_program)
         self.keywords_help.clicked.connect(self.ouvrirDialogue)
-
+        
+        
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Candidate Crawler APEC", None))
-        self.keywords_label.setText(_translate("MainWindow", "Mots-clés de recherche", None))
-        self.cv_number_label.setText(_translate("MainWindow", "Nombre de CVs", None))
-        self.run_button.setText(_translate("MainWindow", "Lancer la recherche", None))
-        self.progression_label.setText(_translate("MainWindow", "Progression", None))
-        self.region_label.setText(_translate("MainWindow", "Région", None))
-        self.mobilite_label.setText(_translate("MainWindow", "Mobilité", None))
-        self.salaire_label.setText(_translate("MainWindow", "Fourchette de salaire", None))
-        self.disponibilite_label.setText(_translate("MainWindow", "Disponibilité", None)) 
-        self.fraicheur_label.setText(_translate("MainWindow", "Fraîcheur des CVs", None))
-
+        
         
         self.menuFichier.setTitle(_translate("MainWindow", "Fichier", None))
         self.menuEdition.setTitle(_translate("MainWindow", "Edition", None))
@@ -221,7 +276,7 @@ class CandidateCrawlerUI(object):
     def ouvrirDialogue(self):
         print("coucou")
         #TODO trUtf8 is deprecated
-        QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés en les séparant par des points-virgules."))
+        QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés en les séparant par des espaces."))
 
     def _entries_retriever(self):
         """Method to get user entries"""
@@ -303,6 +358,13 @@ class CandidateCrawlerGUI(QtGui.QMainWindow, CandidateCrawlerUI):
     def __init__(self, parent=None):
         super(CandidateCrawlerGUI, self).__init__(parent)
         self.setupUi(self)
+        
+        size_ecran = QtGui.QDesktopWidget().screenGeometry()
+        print(size_ecran)
+        size_fenetre = self.geometry()
+        print(size_fenetre)
+        self.move((size_ecran.width()-size_fenetre.width())/2, (size_ecran.height()-size_fenetre.height())/2)
+
 
 ### End of Classes ###
 
