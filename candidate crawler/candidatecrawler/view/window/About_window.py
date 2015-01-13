@@ -10,7 +10,7 @@ Created on 8 janv. 2015
 
 import sys
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QSizePolicy
+from PyQt4.QtGui import QSizePolicy, QBoxLayout
 
 ### End of external modules importation ###
 try:
@@ -32,15 +32,13 @@ except AttributeError:
 class AboutWindowUI(object):
     def setupUi(self, AboutWindow):
         """GUI building for About window"""
-        AboutWindow.resize(330, 330)
-        #layout = QBoxLayout(QBoxLayout.TopToBottom, None)
-        #AboutWindow.setLayout(layout)
         AboutWindow.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
-        AboutWindow.setMinimumSize(QtCore.QSize(330, 330))
-        AboutWindow.setMaximumSize(QtCore.QSize(330, 330))
         self.centralwidget = QtGui.QWidget(AboutWindow)
+        self.qbox = QBoxLayout(QBoxLayout.TopToBottom, self.centralwidget)
+        self.centralwidget.setLayout(self.qbox)
+        
+        ###Titre###
         self.title = QtGui.QLabel(self.centralwidget)
-        self.title.setGeometry(QtCore.QRect(15, 10, 300, 80))
         font = QtGui.QFont()
         font.setPointSize(12)
         font.setBold(True)
@@ -48,22 +46,29 @@ class AboutWindowUI(object):
         self.title.setFont(font)
         self.title.setAlignment(QtCore.Qt.AlignCenter)
         
+        ###Description###
         self.description = QtGui.QLabel(self.centralwidget)
-        self.description.setGeometry(QtCore.QRect(40, 80, 250, 170))
         self.description.setTextFormat(QtCore.Qt.RichText)
         self.description.setScaledContents(False)
         self.description.setWordWrap(True)
         
+        ###Créateurs de l'application###
         self.creator = QtGui.QLabel(self.centralwidget)
-        self.creator.setGeometry(QtCore.QRect(15, 240, 300, 70))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.creator.setFont(font)
         self.creator.setAlignment(QtCore.Qt.AlignCenter)
+        
+        ###Ajout des composants à la fenêtre principale###
+        self.qbox.addWidget(self.title)
+        self.qbox.addWidget(self.description)
+        self.qbox.addWidget(self.creator)
+        
         AboutWindow.setCentralWidget(self.centralwidget)
-
+        
         self.retranslateUi(AboutWindow)
         QtCore.QMetaObject.connectSlotsByName(AboutWindow)
+
 
     def retranslateUi(self, AboutWindow):
         AboutWindow.setWindowTitle(_translate("AboutWindow", "A propos", None))
