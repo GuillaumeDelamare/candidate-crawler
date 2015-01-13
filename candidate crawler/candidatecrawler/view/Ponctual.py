@@ -17,6 +17,7 @@ from PyQt4 import QtCore, QtGui
 ### Custom modules importation ###
 from candidatecrawler.core import toolbox
 from candidatecrawler.view.window import About_window_ponctual
+from candidatecrawler.view.window import About_window
 from PyQt4.QtGui import QIcon, QMessageBox, QListWidget, QListWidgetItem,\
     QCheckBox, QStandardItemModel, QStandardItem
 from PyQt4.QtCore import QSize, QStringList, QVariant
@@ -43,9 +44,9 @@ except AttributeError:
 ### Classes ###
 class CandidateCrawlerUI(object):
     def setupUi(self, MainWindow):
-        MainWindow.resize(300, 610)
-        MainWindow.setMinimumSize(QtCore.QSize(300, 610))
-        MainWindow.setMaximumSize(QtCore.QSize(300, 610))
+        MainWindow.resize(300, 700)
+        MainWindow.setMinimumSize(QtCore.QSize(300, 700))
+        MainWindow.setMaximumSize(QtCore.QSize(300, 700))
         self.centralwidget = QtGui.QWidget(MainWindow)
         
         self.keywords_label = QtGui.QLabel(self.centralwidget)
@@ -83,22 +84,28 @@ class CandidateCrawlerUI(object):
         self.disponibilite_combobox = QtGui.QComboBox(self.centralwidget)
         self.disponibilite_combobox.setGeometry(QtCore.QRect(10, 320, 181, 20))
         
+        self.fraicheur_label = QtGui.QLabel(self.centralwidget)
+        self.fraicheur_label.setGeometry(QtCore.QRect(16, 355, 171, 20))
+        
+        self.fraicheur_combobox = QtGui.QComboBox(self.centralwidget)
+        self.fraicheur_combobox.setGeometry(QtCore.QRect(10, 375, 181, 20))
+        
         self.cv_number_label = QtGui.QLabel(self.centralwidget)
-        self.cv_number_label.setGeometry(QtCore.QRect(16, 355, 171, 20))
+        self.cv_number_label.setGeometry(QtCore.QRect(16, 410, 171, 20))
         
         self.cv_number_entry = QtGui.QLineEdit(self.centralwidget)
-        self.cv_number_entry.setGeometry(QtCore.QRect(10, 375, 181, 20))
+        self.cv_number_entry.setGeometry(QtCore.QRect(10, 430, 181, 20))
         self.cv_number_entry.setInputMethodHints(QtCore.Qt.ImhNone)
         self.cv_number_entry.setText("50")
                  
         self.progression_label = QtGui.QLabel(self.centralwidget)
-        self.progression_label.setGeometry(QtCore.QRect(16, 410, 181, 20))
+        self.progression_label.setGeometry(QtCore.QRect(16, 465, 181, 20))
                     
         self.progression_text = QtGui.QTextBrowser(self.centralwidget)
-        self.progression_text.setGeometry(QtCore.QRect(10, 430, 281, 110))
+        self.progression_text.setGeometry(QtCore.QRect(10, 485, 281, 110))
         
         self.run_button = QtGui.QPushButton(self.centralwidget)
-        self.run_button.setGeometry(QtCore.QRect(16, 555, 270, 23))
+        self.run_button.setGeometry(QtCore.QRect(16, 645, 270, 23))
         
     ###Barre de menu###           
         MainWindow.setCentralWidget(self.centralwidget)
@@ -109,8 +116,10 @@ class CandidateCrawlerUI(object):
         
         MainWindow.setMenuBar(self.menubar)
         self.about_action = QtGui.QAction(MainWindow)
+        self.about_action2 = QtGui.QAction(MainWindow)
         self.exit_action = QtGui.QAction(MainWindow)
         self.reset_action = QtGui.QAction(MainWindow)
+        self.menuFichier.addAction(self.about_action2)
         self.menuFichier.addAction(self.exit_action)
         self.menuEdition.addAction(self.reset_action)
         self.menuAide.addAction(self.about_action)
@@ -129,6 +138,7 @@ class CandidateCrawlerUI(object):
         mobilite_list = tuple(toolbox.xml_reader(staticsxmlfile, "regions").split(','))
         salaire_list = tuple(toolbox.xml_reader(staticsxmlfile, "salaire").split(','))
         disponibilite_list = tuple(toolbox.xml_reader(staticsxmlfile, "disponibilite").split(','))
+        fraicheur_list = tuple(toolbox.xml_reader(staticsxmlfile, "fraicheur").split(','))
          
         
         self.model = QStandardItemModel(self.region_list)
@@ -152,10 +162,16 @@ class CandidateCrawlerUI(object):
          
         for element in disponibilite_list:
             self.disponibilite_combobox.addItem(element)
+        
+        for element in fraicheur_list:
+            self.fraicheur_combobox.addItem(element)
+            
+            
 
         # Action attached to buttons
         ####################################################################
-        self.about_action.triggered.connect(self.about_window)   
+        self.about_action.triggered.connect(self.about_window) 
+        self.about_action2.triggered.connect(self.about_window2)  
         self.exit_action.triggered.connect(self.close)
         self.reset_action.triggered.connect(self.reset)
         self.run_button.clicked.connect(self.run_program)
@@ -163,28 +179,22 @@ class CandidateCrawlerUI(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Candidate Crawler APEC", None))
-        
         self.keywords_label.setText(_translate("MainWindow", "Mots-clés de recherche", None))
-        
         self.cv_number_label.setText(_translate("MainWindow", "Nombre de CVs", None))
-        
         self.run_button.setText(_translate("MainWindow", "Lancer la recherche", None))
-
         self.progression_label.setText(_translate("MainWindow", "Progression", None))
-        
         self.region_label.setText(_translate("MainWindow", "Région", None))
-         
         self.mobilite_label.setText(_translate("MainWindow", "Mobilité", None))
-        
         self.salaire_label.setText(_translate("MainWindow", "Fourchette de salaire", None))
-        
         self.disponibilite_label.setText(_translate("MainWindow", "Disponibilité", None)) 
+        self.fraicheur_label.setText(_translate("MainWindow", "Fraîcheur des CVs", None))
 
         
         self.menuFichier.setTitle(_translate("MainWindow", "Fichier", None))
         self.menuEdition.setTitle(_translate("MainWindow", "Edition", None))
         self.menuAide.setTitle(_translate("MainWindow", "Aide", None))
         self.about_action.setText(_translate("MainWindow", "A propos", None))
+        self.about_action2.setText(_translate("MainWindow", "Administration", None))
         self.exit_action.setText(_translate("MainWindow", "Quitter", None))
         self.reset_action.setText(_translate("MainWindow", "Initialiser", None))
 
@@ -195,7 +205,12 @@ class CandidateCrawlerUI(object):
         """Method to generate About window"""
         self.aw = About_window_ponctual.AboutWindowGUI()
         self.aw.show()
-
+    
+    def about_window2(self):
+        """Method to generate About window"""
+        self.aw = About_window.AboutWindowGUI()
+        self.aw.show()
+        
     def reset(self):
         """Method to reset main window"""
         self.progression_text.clear()
@@ -265,12 +280,12 @@ class CandidateCrawlerUI(object):
 
                 return
 
-           # runapp = core.CandidateCrawlerCore()
-    
+#             runapp = core.CandidateCrawlerCore()
+#     
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
-#                                                  caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
-#                                                  domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region,\
-#                                                  daterange=self.daterange, cv_number=self.ml, db_management = "True")
+#                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
+#                                                 domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region,\
+#                                                 daterange=self.daterange, cv_number=self.ml, db_management = "True")
 
             if len(self.new_links) > 50:
                 self.progression_text.append("Trop d'annonces trouvées. Veuillez affiner vos critères")

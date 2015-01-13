@@ -11,6 +11,7 @@ from PyQt4 import QtCore, QtGui
 ### End of external modules importation ###
 
 from candidatecrawler.core import toolbox #, profilesmanagement
+from ConfigParser import ConfigParser
 #from candidatecrawler.view.window import Edit_profile_window
 
 ### Custom modules importation ###
@@ -111,7 +112,7 @@ class AdminWindowUI(object):
             self.profile_treewidget.resizeColumnToContents(column)
 
 #         # Action attached to buttons
-#         self.db_browse_button.clicked.connect(lambda: self.open_file("db"))
+        self.db_browse_button.clicked.connect(lambda: self.open_file("db"))
 #         self.buttonbox.accepted.connect(self.accept)
 #         self.buttonbox.rejected.connect(self.reject)
 #         self.refresh_button.clicked.connect(self.refresh)
@@ -127,40 +128,40 @@ class AdminWindowUI(object):
 
     # Methods for class AdminWindowUI
 
-#     def open_file(self,usedentry):
-#         """Method to open directory.
-#            Use lambda function on browse button to know which entry has to be used"""
-#         used_entry = eval("self."+ usedentry + "_entry")
-#         initfile = used_entry.text()
-#         initpath = os.path.dirname(initfile)
-#         askedfile = QtGui.QFileDialog.getOpenFileName(self, 'Choisissez un fichier CSV', initpath,("Fichier CSV (*.csv*)"))
-#         used_entry.clear()
-#         used_entry.setText(askedfile)
-# 
-#         if used_entry.text() == "":
-#             used_entry.setText(initfile)
-# 
-#     def accept(self):
-#         """Method to save configuration file and exit"""
-#         write_dict = {}
-#         write_dict["dbfile"] = self.db_entry.text()
-#         write_dict["excludes"] = self.excludes_entry.text()
-# 
-#         toolbox.xml_writer(self.configxmlfile, self.configxmltempfile, write_dict, backup=True)
-# 
-#         self.close()
-# 
-#     def reject(self):
-#         """Method cancel and quit without saving"""
-#         self.close()
-
+    def open_file(self,usedentry):
+        """Method to open directory.
+           Use lambda function on browse button to know which entry has to be used"""
+        used_entry = eval("self."+ usedentry + "_entry")
+        initfile = used_entry.text()
+        initpath = os.path.dirname(initfile)
+        askedfile = QtGui.QFileDialog.getOpenFileName(self, 'Choisissez un fichier CSV', initpath,("Fichier CSV (*.csv*)"))
+        used_entry.clear()
+        used_entry.setText(askedfile)
+ 
+        if used_entry.text() == "":
+            used_entry.setText(initfile)
+ 
+    def accept(self):
+        """Method to save configuration file and exit"""
+        write_dict = {}
+        write_dict["dbfile"] = self.db_entry.text()
+        write_dict["excludes"] = self.excludes_entry.text()
+ 
+        toolbox.xml_writer(self.configxmlfile, self.configxmltempfile, write_dict, backup=True)
+ 
+        self.close()
+ 
+    def reject(self):
+        """Method cancel and quit without saving"""
+        self.close()
+    
 #     def refresh(self):
 #         """Method to refresh profiles window"""
 #         self.profile_treewidget.clear()
-# 
+#  
 #         staticsxmlfile = "statics.xml"
 #         profilepath = toolbox.xml_reader(staticsxmlfile, "profilespath")
-# 
+#  
 #         for name in os.listdir(profilepath):
 #             CustomTreeItem(self.profile_treewidget, name)
 
@@ -169,11 +170,14 @@ class AdminWindowGUI(QtGui.QMainWindow, AdminWindowUI):
         super(AdminWindowGUI, self).__init__(parent)
         self.setupUi(self)
  
-        self.configxmlfile = "Config.xml"
+        self.configinifile = "./config.ini"
         self.configxmltempfile = "Job_crawler_Config_temp.xml"
 # 
 #         self.db_entry.setText(toolbox.xml_reader(self.configxmlfile, "dbfile"))
 #         self.excludes_entry.setText(toolbox.xml_reader(self.configxmlfile, "excludes"))
+        config = ConfigParser()
+        config.read(self.configinifile)
+        self.db_entry.setText(config.get("GENERALPARAMETERS", "dbfile"))
 
 # class CustomTreeItem(QtGui.QTreeWidgetItem):
 #     '''Custom QTreeWidgetItem with Widgets'''
