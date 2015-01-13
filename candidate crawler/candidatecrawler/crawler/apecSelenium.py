@@ -10,7 +10,13 @@ class apecSelenium(InitSpider):
     login = "47179308"
     password = "6KPA43V8"
     keyword = ""
-    region = []
+    region = ["France Outre-Mer","Franche-Comte","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
+             "Limousin"]
+    regions=["Toute la France","Alsace","Aquitaine","Auvergne","Basse-Normandie","Bourgogne","Bretagne","Centre","Champagne","Corse",
+             "France Outre-Mer","Franche-Comte","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
+             "Limousin","Lorraine","Midi-Pyrenees","Nord-Pas-de-Calais",
+             "PACA","Pays de La Loire","Picardie","Poitou-Charentes","Rhone-Alpes"]
+    
     mobilite = ""
     salaire = ""
     disponibilite = ""
@@ -58,19 +64,28 @@ class apecSelenium(InitSpider):
         driver.find_element_by_id('autocomplete').send_keys(self.keyword)
    
         """Region"""
-        #TODO
+        if self.region.__contains__("Toute la France"):
+            webdriver.ActionChains(driver).move_to_element(driver.find_element_by_id("franceEntiere")).click().perform()
+    
+        else:
+            regionssite=driver.find_elements_by_css_selector('.normal>input')
         
+            for k in range(1,len(self.region)):
+                if self.regions.__contains__(self.region[k]) :
+                    webdriver.ActionChains(driver).move_to_element(regionssite[k-1]).click().perform()
+                k=k+1
+            
         """Mobilite"""
-        #TODO
+        #TODO:
         
         """Salaire"""
-        #TODO
+        #TODO:
         
         """Disponibilite"""
-        #TODO
+        #TODO:
         
         """Fraicheur"""
-        #TODO
+        #TODO:
         
         """Acces a la page des CVs"""
         bouttonRechercher = driver.find_element_by_css_selector('.button-search>a')
@@ -78,10 +93,10 @@ class apecSelenium(InitSpider):
         mouseAccesCVS.move_to_element(bouttonRechercher).click().perform()
         
         """Enregistrer les liens des CVs a telecharger"""
-        #Todo
+        #Todo:
         
         """Telecharger les Cvs"""
-        #TODO
+        #TODO:
         
         """Fermeture de la fenetre"""
         driver.close()
