@@ -16,14 +16,14 @@ from PyQt4 import QtCore, QtGui
 
 ### Custom modules importation ###
 from candidatecrawler.core import toolbox
-from candidatecrawler.view.window import About_window_ponctual
 from candidatecrawler.view.window import About_window
+from candidatecrawler.view.window import Admin_window
 from PyQt4.QtGui import QIcon, QMessageBox, QListWidget, QListWidgetItem,\
     QCheckBox, QStandardItemModel, QStandardItem
 from PyQt4.QtCore import QSize, QStringList, QVariant
 from PyQt4.Qt import Qt
 
-#from CandidateCrawler.view.window import About_window_ponctual
+#from CandidateCrawler.view.window import About_window
 
 ### End of custom modules importation ###
 
@@ -105,7 +105,7 @@ class CandidateCrawlerUI(object):
         self.progression_text.setGeometry(QtCore.QRect(10, 485, 281, 110))
         
         self.run_button = QtGui.QPushButton(self.centralwidget)
-        self.run_button.setGeometry(QtCore.QRect(16, 645, 270, 23))
+        self.run_button.setGeometry(QtCore.QRect(16, 630, 270, 23))
         
     ###Barre de menu###           
         MainWindow.setCentralWidget(self.centralwidget)
@@ -203,12 +203,12 @@ class CandidateCrawlerUI(object):
 
     def about_window(self):
         """Method to generate About window"""
-        self.aw = About_window_ponctual.AboutWindowGUI()
+        self.aw = About_window.AdminWindowGUI()
         self.aw.show()
     
     def about_window2(self):
         """Method to generate About window"""
-        self.aw = About_window.AboutWindowGUI()
+        self.aw = Admin_window.AdminWindowGUI()
         self.aw.show()
         
     def reset(self):

@@ -91,4 +91,19 @@ def get_apec_id():
     login = config.get('APEC','login')
     password = config.get('APEC','password')
     return login, password
+
+def getconfigvalue(section, option):
+    config = ConfigParser()
+    config.read("./config.ini")
+
+    return config.get(section, option)
+
+def writeconfigvalue(section, option, value):
+    config = ConfigParser()
+    config.read("./config.ini")
+
+    config.set(section, option, u''.join(unicode(value)).encode('utf-8'))
+    with open("./config.ini", 'wb') as configfile:
+        config.write(configfile)
+    
 ### End of functions ###
