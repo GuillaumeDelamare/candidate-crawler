@@ -140,7 +140,7 @@ class AdminWindowUI(object):
         """Method to open directory.
            Use lambda function on browse button to know which entry has to be used"""
         used_entry = eval("self."+ usedentry + "_entry")
-        initfile = used_entry.text()
+        initfile = str(used_entry.text())
         initpath = os.path.dirname(initfile)
         askedfile = QtGui.QFileDialog.getOpenFileName(self, 'Choisissez un fichier CSV', initpath,("Fichier CSV (*.csv*)"))
         used_entry.clear()
@@ -151,12 +151,9 @@ class AdminWindowUI(object):
 
     def accept(self):
         """Method to save configuration file and exit"""
-        write_dict = {}
-        write_dict["dbfile"] = self.db_entry.text()
-        write_dict["excludes"] = self.excludes_entry.text()
-
-        toolbox.xml_writer(self.configxmlfile, self.configxmltempfile, write_dict, backup=True)
-
+        toolbox.writeconfigvalue("GENERAL", "dbfile", self.db_entry.text())
+        toolbox.writeconfigvalue("GENERAL", "excludes", self.excludes_entry.text())
+        
         self.close()
 
     def reject(self):
@@ -181,8 +178,8 @@ class AdminWindowGUI(QtGui.QMainWindow, AdminWindowUI):
         self.configxmlfile = "Config.xml"
         self.configxmltempfile = "Job_crawler_Config_temp.xml"
 
-        self.db_entry.setText(toolbox.xml_reader(self.configxmlfile, "dbfile"))
-        self.excludes_entry.setText(toolbox.xml_reader(self.configxmlfile, "excludes"))
+        self.db_entry.setText(toolbox.getconfigvalue("GENERAL", "dbfile"))
+        self.excludes_entry.setText(unicode(toolbox.getconfigvalue("GENERAL", "excludes")))
 
 class CustomTreeItem(QtGui.QTreeWidgetItem):
     '''Custom QTreeWidgetItem with Widgets'''

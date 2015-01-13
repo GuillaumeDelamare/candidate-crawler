@@ -12,6 +12,7 @@ import os
 import datetime
 import httplib
 import xml.etree.ElementTree
+import ConfigParser
 
 ### End of external modules importation ###
 
@@ -29,9 +30,9 @@ def current_date():
 
     return currentdate
 
-def compute_duration(day,month,year):
+def compute_duration(date):
     """Compute duration between 2 dates"""
-    duration = datetime.datetime.now() - datetime.datetime(year,month,day)
+    duration = datetime.datetime.now() - datetime.datetime(date)
 
     return duration.days
 
@@ -91,4 +92,18 @@ def xml_writer(input_file, output_file, entry_value_dict, backup=True):
         os.remove(input_file)
         os.rename(output_file,input_file)
 
-### End of functions ###
+def getconfigvalue(section, option):
+    config = ConfigParser.ConfigParser()
+    config.read("./config.ini")
+
+    return config.get(section, option)
+
+def writeconfigvalue(section, option, value):
+    config = ConfigParser.ConfigParser()
+    config.read("./config.ini")
+
+    config.set(section, option, u''.join(unicode(value)).encode('utf-8'))
+    with open("./config.ini", 'wb') as configfile:
+        config.write(configfile)
+    
+
