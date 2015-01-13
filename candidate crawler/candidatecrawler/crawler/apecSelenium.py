@@ -10,8 +10,7 @@ class apecSelenium(InitSpider):
     login = "47179308"
     password = "6KPA43V8"
     keyword = ""
-    region = ["France Outre-Mer","Franche-Comte","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
-             "Limousin"]
+    region = []
     regions=["Toute la France","Alsace","Aquitaine","Auvergne","Basse-Normandie","Bourgogne","Bretagne","Centre","Champagne","Corse",
              "France Outre-Mer","Franche-Comte","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
              "Limousin","Lorraine","Midi-Pyrenees","Nord-Pas-de-Calais",
@@ -70,8 +69,8 @@ class apecSelenium(InitSpider):
         else:
             regionssite=driver.find_elements_by_css_selector('.normal>input')
         
-            for k in range(1,len(self.region)):
-                if self.regions.__contains__(self.region[k]) :
+            for k in range(0,len(self.regions)):
+                if self.region.__contains__(self.regions[k]) :
                     webdriver.ActionChains(driver).move_to_element(regionssite[k-1]).click().perform()
                 k=k+1
             
@@ -99,6 +98,6 @@ class apecSelenium(InitSpider):
         #TODO:
         
         """Fermeture de la fenetre"""
-        driver.close()
+        #driver.close()
         
         
