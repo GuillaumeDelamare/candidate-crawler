@@ -22,7 +22,7 @@ from jobcrawler.core import toolbox
 
 ### Functions ###
 
-def read_database(dbfile, usage):
+def read_database(dbfile, usage="all"):
     """Read CSV database"""
     csv_content = []
     read_database = csv.reader(open(dbfile,"r"), delimiter=',')
@@ -50,33 +50,24 @@ def write_database(dbfile, linklist):
 
 def clean_database(dbfile, max_store_day):
     """Clean CSV database"""
-    csv_content = []
     cleaned_csv_content = [["DATE","LINK"]]
-
-    if os.path.isfile("{0}.backup".format(dbfile[0:-4])):
-        os.remove("{0}.backup".format(dbfile[0:-4]))
-        shutil.copy(dbfile,"{0}.backup".format(dbfile[0:-4]))
-    else:
-        shutil.copy(dbfile,"{0}.backup".format(dbfile[0:-4]))
-
-    read_database = csv.reader(open(dbfile,"r"), delimiter=',')
-
-    for line in read_database:
-        csv_content.append(line)
-
+    
+    # Create a backup
+    backupfile = "{0}.backup".format(dbfile[0:-4])
+    if os.path.isfile(backupfile):
+        os.remove(backupfile)
+    shutil.copy(dbfile,backupfile)
+    
+    # Read database
+    csv_content = read_database(dbfile)
     csv_content.pop(0)
 
+    # Filter on date
+    fmt = "%d-%m-%Y"
     for element in csv_content:
-        date = element[0]
-        linkday = date[0:2]
-        if linkday[0:1] == "0":
-            linkday = date[1:2]
-        linkmonth = date[3:5]
-        if linkmonth[0:1] == "0":
-            linkmonth = date[4:5]
-        linkyear = date[6:10]
+        date = datetime.strptime(element[0], fmt)
 
-        if toolbox.compute_duration(int(linkday),int(linkmonth),int(linkyear)) < max_store_day:
+        if toolbox.compute_duration(date) < max_store_day:
             cleaned_csv_content.append(element)
 
     csv_file = open(dbfile,"w")

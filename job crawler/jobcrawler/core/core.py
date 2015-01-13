@@ -16,8 +16,7 @@ import bs4
 
 ### Custom modules importation ###
 
-from jobcrawler.core import dbmanagement, toolbox
-from jobcrawler.core import myEmail
+from jobcrawler.core import dbmanagement, toolbox, myEmail
 from jobcrawler.crawler import aerocontact, aeroemploiformation, apec, caoemploi, indeed, monster, poleemploi, regionjob
 
 ### End of custom modules importation ###
