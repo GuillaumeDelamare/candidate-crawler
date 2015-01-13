@@ -18,9 +18,8 @@ from PyQt4 import QtCore, QtGui
 from candidatecrawler.core import toolbox
 from candidatecrawler.view.window import About_window
 from candidatecrawler.view.window import Admin_window
-from PyQt4.QtGui import QIcon, QMessageBox, QListWidget, QListWidgetItem,\
-    QCheckBox, QStandardItemModel, QStandardItem
-from PyQt4.QtCore import QSize, QStringList, QVariant
+from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem
+from PyQt4.QtCore import QSize, QVariant
 from PyQt4.Qt import Qt
 
 #from CandidateCrawler.view.window import About_window
@@ -116,10 +115,10 @@ class CandidateCrawlerUI(object):
         
         MainWindow.setMenuBar(self.menubar)
         self.about_action = QtGui.QAction(MainWindow)
-        self.about_action2 = QtGui.QAction(MainWindow)
+        self.admin_action = QtGui.QAction(MainWindow)
         self.exit_action = QtGui.QAction(MainWindow)
         self.reset_action = QtGui.QAction(MainWindow)
-        self.menuFichier.addAction(self.about_action2)
+        self.menuFichier.addAction(self.admin_action)
         self.menuFichier.addAction(self.exit_action)
         self.menuEdition.addAction(self.reset_action)
         self.menuAide.addAction(self.about_action)
@@ -171,7 +170,7 @@ class CandidateCrawlerUI(object):
         # Action attached to buttons
         ####################################################################
         self.about_action.triggered.connect(self.about_window) 
-        self.about_action2.triggered.connect(self.about_window2)  
+        self.admin_action.triggered.connect(self.admin_window)  
         self.exit_action.triggered.connect(self.close)
         self.reset_action.triggered.connect(self.reset)
         self.run_button.clicked.connect(self.run_program)
@@ -194,7 +193,7 @@ class CandidateCrawlerUI(object):
         self.menuEdition.setTitle(_translate("MainWindow", "Edition", None))
         self.menuAide.setTitle(_translate("MainWindow", "Aide", None))
         self.about_action.setText(_translate("MainWindow", "A propos", None))
-        self.about_action2.setText(_translate("MainWindow", "Administration", None))
+        self.admin_action.setText(_translate("MainWindow", "Administration", None))
         self.exit_action.setText(_translate("MainWindow", "Quitter", None))
         self.reset_action.setText(_translate("MainWindow", "Initialiser", None))
 
@@ -203,13 +202,13 @@ class CandidateCrawlerUI(object):
 
     def about_window(self):
         """Method to generate About window"""
-        self.aw = About_window.AdminWindowGUI()
-        self.aw.show()
+        self.about_w = About_window.AboutWindowGUI()
+        self.about_w.show()
     
-    def about_window2(self):
+    def admin_window(self):
         """Method to generate About window"""
-        self.aw = Admin_window.AdminWindowGUI()
-        self.aw.show()
+        self.admin_w = Admin_window.AdminWindowGUI()
+        self.admin_w.show()
         
     def reset(self):
         """Method to reset main window"""
