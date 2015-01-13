@@ -8,9 +8,9 @@ from twisted.internet import reactor
 from scrapy.crawler import Crawler
 from scrapy.settings import Settings
 from scrapy import log
-from candidatecrawler.crawler.apec import CVSpider
+from candidatecrawler.crawler.apecSelenium import apecSelenium
 
-spider = CVSpider('','','')
+spider = apecSelenium('47179308','6KPA43V8','catia',[],"","","","",50)
 crawler = Crawler(Settings())
 crawler.configure()
 crawler.crawl(spider)
