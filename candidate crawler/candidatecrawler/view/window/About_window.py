@@ -10,7 +10,7 @@ Created on 8 janv. 2015
 
 import sys
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QSizePolicy, QLayout, QBoxLayout
+from PyQt4.QtGui import QSizePolicy
 
 ### End of external modules importation ###
 try:
@@ -29,16 +29,16 @@ except AttributeError:
 
 ### Classes ###
 
-class AdminWindowUI(object):
-    def setupUi(self, AdminWindow):
+class AboutWindowUI(object):
+    def setupUi(self, AboutWindow):
         """GUI building for About window"""
-        AdminWindow.resize(330, 330)
+        AboutWindow.resize(330, 330)
         #layout = QBoxLayout(QBoxLayout.TopToBottom, None)
-        #AdminWindow.setLayout(layout)
-        AdminWindow.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
-        AdminWindow.setMinimumSize(QtCore.QSize(330, 330))
-        AdminWindow.setMaximumSize(QtCore.QSize(330, 330))
-        self.centralwidget = QtGui.QWidget(AdminWindow)
+        #AboutWindow.setLayout(layout)
+        AboutWindow.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
+        AboutWindow.setMinimumSize(QtCore.QSize(330, 330))
+        AboutWindow.setMaximumSize(QtCore.QSize(330, 330))
+        self.centralwidget = QtGui.QWidget(AboutWindow)
         self.title = QtGui.QLabel(self.centralwidget)
         self.title.setGeometry(QtCore.QRect(15, 10, 300, 80))
         font = QtGui.QFont()
@@ -60,10 +60,10 @@ class AdminWindowUI(object):
         font.setPointSize(10)
         self.creator.setFont(font)
         self.creator.setAlignment(QtCore.Qt.AlignCenter)
-        AdminWindow.setCentralWidget(self.centralwidget)
+        AboutWindow.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(AdminWindow)
-        QtCore.QMetaObject.connectSlotsByName(AdminWindow)
+        self.retranslateUi(AboutWindow)
+        QtCore.QMetaObject.connectSlotsByName(AboutWindow)
 
     def retranslateUi(self, AboutWindow):
         AboutWindow.setWindowTitle(_translate("AboutWindow", "A propos", None))
@@ -71,9 +71,9 @@ class AdminWindowUI(object):
         self.description.setText(_translate("AboutWindow", "<html><body><p align = justify>Ce programme parcours le site de l'APEC pour trouver les meilleurs CVs, à partir d'une liste de critères.</p><p align = justify>Une fois la recherche effectuée, l\'utilisateur télécharge un fichier Zip contenant un tableau Excel récapitulatif ainsi que les CVs trouvés.</p><p align = justify>Le programme exploite une base CSV pour stocker les CVs trouvés.</p></body></html>", None))
         self.creator.setText(_translate("AboutWindow", "<html><body><br>Application créée par Guillaume DELAMARE,</br><br>Jonathan SCHIEBEL, Julie SPENS,</br><br>Laura TAPIAS, Pierre THEILHARD</br></body><html>", None))
 
-class AdminWindowGUI(QtGui.QMainWindow, AdminWindowUI):
+class AboutWindowGUI(QtGui.QMainWindow, AboutWindowUI):
     def __init__(self, parent=None):
-        super(AdminWindowGUI, self).__init__(parent)
+        super(AboutWindowGUI, self).__init__(parent)
         self.setupUi(self)
 
 ### End of classes ###
@@ -82,7 +82,7 @@ class AdminWindowGUI(QtGui.QMainWindow, AdminWindowUI):
 
 if __name__=='__main__':
     app = QtGui.QApplication(sys.argv)
-    myapp = AdminWindowGUI()
+    myapp = AboutWindowGUI()
     myapp.show()
     app.exec_()
 
