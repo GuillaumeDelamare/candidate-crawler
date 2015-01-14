@@ -18,4 +18,4 @@ crawler.start()
 log.start()
 
 
-reactor.run() #@UndefinedVariable
+print(reactor.run()) #@UndefinedVariable
