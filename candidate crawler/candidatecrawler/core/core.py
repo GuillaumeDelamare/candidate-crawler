@@ -6,16 +6,10 @@ Created on 7 janv. 2015
 
 ### External modules importation ###
 
-import re
-import urllib
-import bs4
-from candidatecrawler.view import Ponctual
 
 ### End of external modules importation ###
 
 ### Custom modules importation ###
-
-from candidatecrawler.core import toolbox, dbmanagement
 
 
 ### End of custom modules importation ###

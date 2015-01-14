@@ -11,16 +11,14 @@ Created on 7 janv. 2015
 import sys
 import webbrowser
 from PyQt4 import QtCore, QtGui
-import candidatecrawler.core.core
 
 ### End of external modules importation ###
 
 ### Custom modules importation ###
-from candidatecrawler.core import toolbox
+from candidatecrawler.core import core, toolbox
 from candidatecrawler.view.window import About_window
 from candidatecrawler.view.window import Admin_window
-from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem, QBoxLayout,\
-    QSizePolicy
+from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem, QBoxLayout
 from PyQt4.QtCore import QSize, QVariant
 from PyQt4.Qt import Qt
 
@@ -281,9 +279,13 @@ class CandidateCrawlerUI(object):
     def _entries_retriever(self):
         """Method to get user entries"""
         self.keywords = tuple(self.keywords_entry.text().split(','))
-        self.region = self.region_combobox.currentText()
-        self.ml = tuple(self.cv_number_entry.text().split(','))
-
+        self.region = self.region_list.SelectedClicked
+        self.mobilite = self.mobilite_combobox.currentText()
+        self.salaire = self.salaire_combobox.currentText()
+        self.disponibilite = self.disponibilite_list.SelectedClicked
+        self.fraicheur = self.fraicheur_combobox.currentText()
+        self.nombreCV = tuple(self.cv_number_entry.text().split(','))
+        
     def _entries_checker(self):
         """Method to check user entries"""
         error_code = False
@@ -293,32 +295,32 @@ class CandidateCrawlerUI(object):
             error_code = True
             error_list.append("Veuillez entrer des mots-clé")
 
-        if self.queries[0] == "":
-            error_code = True
-            error_list.append("Veuillez entrer des critères de filtrage")
+#         if self.queries[0] == "":
+#             error_code = True
+#             error_list.append("Veuillez entrer des critères de filtrage")
 
-        if self.ml[0] != "":
-            for element in self.ml:
-                if not "@" in element:
-                    error_code = True
-                    error_list.append("Une adresse e-mail semble mal formattée")
+#         if self.ml[0] != "":
+#             for element in self.ml:
+#                 if not "@" in element:
+#                     error_code = True
+#                     error_list.append("Une adresse e-mail semble mal formattée")
 
         return error_code, error_list
 
-    def _open_in_browser(self):
-        """Method to open all requested links in browser"""
-        for link in self.new_links:
-            webbrowser.open(link)
+#     def _open_in_browser(self):
+#         """Method to open all requested links in browser"""
+#         for link in self.new_links:
+#             webbrowser.open(link)
 
-    def _change_open_button_status(self, status):
-        """Method to change open button status"""
-        self.open_in_browser_button.setEnabled(status)
+#     def _change_open_button_status(self, status):
+#         """Method to change open button status"""
+#         self.open_in_browser_button.setEnabled(status)
 
     def run_program(self):
         """Method to run program on tab1: ponctual search"""
         self.progression_text.append("Lancement du programme")
         self.progression_text.append("Programme en cours ...")
-        self._change_open_button_status(False)
+        #self._change_open_button_status(False)
 
         app.processEvents() # Window refresh
 
@@ -333,21 +335,21 @@ class CandidateCrawlerUI(object):
                 self.progression_text.append("Programme stoppé")
 
                 return
-
-#             runapp = core.CandidateCrawlerCore()
-#      
+            
+            runapp = core.CandidateCrawlerCore(self.keywords, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
+#        
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
-#                                                 domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region,\
+#                                                 domain=self.domain, keywords=self.keywords, region=self.region,\
 #                                                 daterange=self.daterange, cv_number=self.ml, db_management = "True")
-
-            if len(self.new_links) > 50:
-                self.progression_text.append("Trop d'annonces trouvées. Veuillez affiner vos critères")
-                self.progression_text.append("Fin du programme\n")
-            else:
-                self.progression_text.append("{0} nouvelles annonces trouvées".format(len(self.new_links)))
-                self.progression_text.append("Fin du programme\n")
-                self._change_open_button_status(True)
+# 
+#             if len(self.new_links) > 50:
+#                 self.progression_text.append("Trop d'annonces trouvées. Veuillez affiner vos critères")
+#                 self.progression_text.append("Fin du programme\n")
+#             else:
+#                 self.progression_text.append("{0} nouvelles annonces trouvées".format(len(self.new_links)))
+#                 self.progression_text.append("Fin du programme\n")
+#                 self._change_open_button_status(True)
         except:
             self.progression_text.append("Oups, quelque chose s'est mal passé")
             self.progression_text.append("Veuillez contacter l'admin")
