@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 7 janv. 2015
 
@@ -41,7 +42,18 @@ class CandidateCrawlerCore(object):
     
 #     #TODO: Appel crawler
     def crawl(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
-        spider = apecSelenium('47179308','6KPA43V8','catia',["France Outre-Mer","Franche-Comte","Haute-Normandie","Ile-de-France","Languedoc-Roussillon"],"","","","",50)
+        
+        print(login)
+        print(password)
+        print(keyword)
+        print(region)
+        print(mobilite)
+        print(salaire)
+        print(disponibilite)
+        print(fraicheur)
+        print(nombreCV)
+        
+        spider = apecSelenium(login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV)
         crawler = Crawler(Settings())
         crawler.configure()
         crawler.crawl(spider)

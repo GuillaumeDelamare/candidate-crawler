@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from selenium import webdriver
 from scrapy.contrib.spiders.init import InitSpider
 
@@ -12,9 +13,9 @@ class apecSelenium(InitSpider):
     keyword = ""
     region = []
     regions=["Toute la France","Alsace","Aquitaine","Auvergne","Basse-Normandie","Bourgogne","Bretagne","Centre","Champagne","Corse",
-             "France Outre-Mer","Franche-Comte","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
-             "Limousin","Lorraine","Midi-Pyrenees","Nord-Pas-de-Calais",
-             "PACA","Pays de La Loire","Picardie","Poitou-Charentes","Rhone-Alpes"]
+             "France Outre-Mer","Franche-Comté","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
+             "Limousin","Lorraine","Midi-Pyrénées","Nord-Pas-de-Calais",
+             "PACA","Pays de La Loire","Picardie","Poitou-Charentes","Rhône-Alpes"]
     
     mobilite = ""
     salaire = ""
