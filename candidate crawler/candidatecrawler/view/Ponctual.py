@@ -11,6 +11,7 @@ Created on 7 janv. 2015
 import sys
 import webbrowser
 from PyQt4 import QtCore, QtGui
+import candidatecrawler.core.core
 
 ### End of external modules importation ###
 
@@ -65,7 +66,7 @@ class CandidateCrawlerUI(object):
         self.vbox_keywords = QtGui.QVBoxLayout()
         self.vbox_keywords.addLayout(self.hbox_keywords)
         self.vbox_keywords.addWidget(self.keywords_entry)
-        self.vbox_keywords.setContentsMargins(0, 0, 0, 10) 
+        self.vbox_keywords.setContentsMargins(0, 0, 0, 5) 
          
         ###Région### 
         self.region_label = QtGui.QLabel(self.centralwidget)
@@ -76,7 +77,7 @@ class CandidateCrawlerUI(object):
         self.vbox_region = QtGui.QVBoxLayout()
         self.vbox_region.addWidget(self.region_label)
         self.vbox_region.addWidget(self.region_list)
-        self.vbox_region.setContentsMargins(0, 0, 0, 10)
+        self.vbox_region.setContentsMargins(0, 0, 0, 5)
         
         ###Mobilité###
         self.mobilite_label = QtGui.QLabel(self.centralwidget)
@@ -87,7 +88,7 @@ class CandidateCrawlerUI(object):
         self.vbox_mobilite = QtGui.QVBoxLayout()
         self.vbox_mobilite.addWidget(self.mobilite_label)
         self.vbox_mobilite.addWidget(self.mobilite_combobox)
-        self.vbox_mobilite.setContentsMargins(0, 0, 0, 10)
+        self.vbox_mobilite.setContentsMargins(0, 0, 0, 5)
         
         ###Salaire###
         self.salaire_label = QtGui.QLabel(self.centralwidget)
@@ -98,18 +99,18 @@ class CandidateCrawlerUI(object):
         self.vbox_salaire = QtGui.QVBoxLayout()
         self.vbox_salaire.addWidget(self.salaire_label)
         self.vbox_salaire.addWidget(self.salaire_combobox)
-        self.vbox_salaire.setContentsMargins(0, 0, 0, 10)
+        self.vbox_salaire.setContentsMargins(0, 0, 0, 5)
         
         ###Disponibilité###
         self.disponibilite_label = QtGui.QLabel(self.centralwidget)
         self.disponibilite_label.setText(_translate("AdminWindow", "Disponibilité", None))
                 
-        self.disponibilite_combobox = QtGui.QComboBox(self.centralwidget)
+        self.disponibilite_list = QtGui.QListView(self.centralwidget)
         
         self.vbox_disponibilite = QtGui.QVBoxLayout()
         self.vbox_disponibilite.addWidget(self.disponibilite_label)
-        self.vbox_disponibilite.addWidget(self.disponibilite_combobox)
-        self.vbox_disponibilite.setContentsMargins(0, 0, 0, 10)
+        self.vbox_disponibilite.addWidget(self.disponibilite_list)
+        self.vbox_disponibilite.setContentsMargins(0, 0, 0, 5)
         
         ###Fraîcheur###
         self.fraicheur_label = QtGui.QLabel(self.centralwidget)
@@ -120,7 +121,7 @@ class CandidateCrawlerUI(object):
         self.vbox_fraicheur = QtGui.QVBoxLayout()
         self.vbox_fraicheur.addWidget(self.fraicheur_label)
         self.vbox_fraicheur.addWidget(self.fraicheur_combobox)
-        self.vbox_fraicheur.setContentsMargins(0, 0, 0, 10)
+        self.vbox_fraicheur.setContentsMargins(0, 0, 0, 5)
         
         ###Nombre de CVs###
         self.cv_number_label = QtGui.QLabel(self.centralwidget)
@@ -133,7 +134,7 @@ class CandidateCrawlerUI(object):
         self.vbox_cv_number = QtGui.QVBoxLayout()
         self.vbox_cv_number.addWidget(self.cv_number_label)
         self.vbox_cv_number.addWidget(self.cv_number_entry)
-        self.vbox_cv_number.setContentsMargins(0, 0, 0, 10)
+        self.vbox_cv_number.setContentsMargins(0, 0, 0, 5)
             
         ###Progression###         
         self.progression_label = QtGui.QLabel(self.centralwidget)
@@ -144,7 +145,7 @@ class CandidateCrawlerUI(object):
         self.vbox_progression = QtGui.QVBoxLayout()
         self.vbox_progression.addWidget(self.progression_label)
         self.vbox_progression.addWidget(self.progression_text)
-        self.vbox_progression.setContentsMargins(0, 0, 0, 10)
+        self.vbox_progression.setContentsMargins(0, 0, 0, 5)
         
         ###Bouton de lancement###
         self.run_button = QtGui.QPushButton(self.centralwidget)
@@ -207,14 +208,16 @@ class CandidateCrawlerUI(object):
             item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
             self.model.appendRow(item)
         self.region_list.setModel(self.model)
+        
+        self.model2 = QStandardItemModel(self.disponibilite_list)
+        for disponibilite in disponibilite_list:
+            item = QStandardItem(disponibilite)
+            item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
+            self.model2.appendRow(item)
+        self.disponibilite_list.setModel(self.model2)
          
-#         self.model2 = QStandardItemModel(self.mobilite_list)
-#         for mobilite in mobilite_list:
-#             item = QStandardItem(mobilite)
-#             item.setFlags(Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
-#             item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
-#             self.model2.appendRow(item)
-#         self.mobilite_list.setModel(self.model2)
+
 
         for element in mobilite_list:
             self.mobilite_combobox.addItem(element)
@@ -222,8 +225,6 @@ class CandidateCrawlerUI(object):
         for element in salaire_list:
             self.salaire_combobox.addItem(element)
          
-        for element in disponibilite_list:
-            self.disponibilite_combobox.addItem(element)
         
         for element in fraicheur_list:
             self.fraicheur_combobox.addItem(element)
@@ -274,7 +275,6 @@ class CandidateCrawlerUI(object):
         self.close()
     
     def ouvrirDialogue(self):
-        print("coucou")
         #TODO trUtf8 is deprecated
         QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés en les séparant par des espaces."))
 
@@ -335,7 +335,7 @@ class CandidateCrawlerUI(object):
                 return
 
 #             runapp = core.CandidateCrawlerCore()
-#     
+#      
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
 #                                                 domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region,\
