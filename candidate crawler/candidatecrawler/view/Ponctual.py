@@ -69,7 +69,7 @@ class CandidateCrawlerUI(object):
          
         ###Région### 
         self.region_label = QtGui.QLabel(self.centralwidget)
-        self.region_label.setText(_translate("AdminWindow", "Région", None))
+        self.region_label.setText(_translate("AdminWindow", "Région (maximum 5 choix)", None))
                         
         self.region_list = QtGui.QListView(self.centralwidget)
         
@@ -358,12 +358,7 @@ class CandidateCrawlerGUI(QtGui.QMainWindow, CandidateCrawlerUI):
     def __init__(self, parent=None):
         super(CandidateCrawlerGUI, self).__init__(parent)
         self.setupUi(self)
-        
-        size_ecran = QtGui.QDesktopWidget().screenGeometry()
-        print(size_ecran)
-        size_fenetre = self.geometry()
-        print(size_fenetre)
-        self.move((size_ecran.width()-size_fenetre.width())/2, (size_ecran.height()-size_fenetre.height())/2)
+        self.adjustSize()
 
 
 ### End of Classes ###
