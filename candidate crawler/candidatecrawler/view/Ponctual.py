@@ -293,17 +293,12 @@ class CandidateCrawlerUI(object):
 
         if self.keywords[0] == "":
             error_code = True
-            error_list.append("Veuillez entrer des mots-clé")
+            error_list.append(_translate("MainWindow", "Veuillez entrer des mots-clés", None))
 
-#         if self.queries[0] == "":
-#             error_code = True
-#             error_list.append("Veuillez entrer des critères de filtrage")
+        if self.nombreCV[0] == "":
+            error_code = True
+            error_list.append(_translate("MainWindow", "Veuillez entrer un nombre de CVs", None))
 
-#         if self.ml[0] != "":
-#             for element in self.ml:
-#                 if not "@" in element:
-#                     error_code = True
-#                     error_list.append("Une adresse e-mail semble mal formattée")
 
         return error_code, error_list
 
@@ -332,12 +327,12 @@ class CandidateCrawlerUI(object):
                 for element in self._entries_checker()[1]:
                     self.progression_text.append(element)
                 self.progression_text.setTextColor(QtGui.QColor("black"))
-                self.progression_text.append("Programme stoppé")
+                self.progression_text.append(_translate("MainWindow", "Programme stoppé", None))
 
                 return
             
             runapp = core.CandidateCrawlerCore(self.keywords, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
-#        
+            runapp.crawl(toolbox.getconfigvalue("APEC", "login"), toolbox.getconfigvalue("APEC", "password"), self.keyword, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
 #                                                 domain=self.domain, keywords=self.keywords, region=self.region,\
