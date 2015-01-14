@@ -43,15 +43,15 @@ class CandidateCrawlerCore(object):
 #     #TODO: Appel crawler
     def crawl(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
         
-        print(login)
-        print(password)
-        print(keyword)
-        print(region)
-        print(mobilite)
-        print(salaire)
-        print(disponibilite)
-        print(fraicheur)
-        print(nombreCV)
+#         print(login)
+#         print(password)
+#         print(keyword)
+#         print(region)
+#         print(mobilite)
+#         print(salaire)
+#         print(disponibilite)
+#         print(fraicheur)
+#         print(nombreCV)
         
         spider = apecSelenium(login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV)
         crawler = Crawler(Settings())
