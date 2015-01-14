@@ -9,13 +9,13 @@ Created on 7 janv. 2015
 import re
 import urllib
 import bs4
+from candidatecrawler.view import Ponctual
 
 ### End of external modules importation ###
 
 ### Custom modules importation ###
 
 from candidatecrawler.core import toolbox, dbmanagement
-from candidatecrawler.crawler import poleemploi
 
 
 ### End of custom modules importation ###
@@ -23,18 +23,39 @@ from candidatecrawler.crawler import poleemploi
 ### Classes ###
 class CandidateCrawlerCore(object):
     #TODO: Listeners
+    keyword = ""
+    region = []
+    mobilite = ""
+    salaire = ""
+    disponibilite = ""
+    fraicheur = ""
+    nombreCV = 50 
     
     
-    #TODO: Appel crawler
-    def crawl(self,):
+    def __init__(self,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
+        """Initialisation du spider"""
+        
+        self.keyword = keyword 
+        self.region = region
+        self.mobilite = mobilite
+        self.salaire = salaire
+        self.disponibilite = disponibilite
+        self.fraicheur = fraicheur
+        self.nombreCV = nombreCV
+         
     
-    #TODO: Telechargement des CVs
     
     
-    #TODO: Creation de l'excel
-
-
-    #TODO: Zippage
+#     #TODO: Appel crawler
+#     def crawl(self,):
+#     
+#     #TODO: Telechargement des CVs
+#     
+#     
+#     #TODO: Creation de l'excel
+# 
+# 
+#     #TODO: Zippage
 
 
 
