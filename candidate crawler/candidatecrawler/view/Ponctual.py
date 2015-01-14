@@ -278,7 +278,7 @@ class CandidateCrawlerUI(object):
 
     def _entries_retriever(self):
         """Method to get user entries"""
-        self.keywords = tuple(self.keywords_entry.text().split(','))
+        self.keywords = self.keywords_entry.text()
         self.region = self.region_list.SelectedClicked
         self.mobilite = self.mobilite_combobox.currentText()
         self.salaire = self.salaire_combobox.currentText()
@@ -332,7 +332,7 @@ class CandidateCrawlerUI(object):
                 return
             
             runapp = core.CandidateCrawlerCore(self.keywords, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
-            runapp.crawl(toolbox.getconfigvalue("APEC", "login"), toolbox.getconfigvalue("APEC", "password"), self.keyword, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
+            runapp.crawl(toolbox.getconfigvalue("APEC", "login"), toolbox.getconfigvalue("APEC", "password"), self.keywords, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
 #                                                 domain=self.domain, keywords=self.keywords, region=self.region,\
