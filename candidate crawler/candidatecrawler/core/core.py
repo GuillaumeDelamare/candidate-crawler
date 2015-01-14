@@ -4,15 +4,14 @@ Created on 7 janv. 2015
 @author: Jonathan
 '''
 
-### External modules importation ###
+### Modules importation ###
+from twisted.internet import reactor
+from scrapy.crawler import Crawler
+from scrapy.settings import Settings
+from scrapy import log
+from candidatecrawler.crawler.apecSelenium import apecSelenium
 
-
-### End of external modules importation ###
-
-### Custom modules importation ###
-
-
-### End of custom modules importation ###
+### End modules importation ###
 
 ### Classes ###
 class CandidateCrawlerCore(object):
@@ -41,7 +40,14 @@ class CandidateCrawlerCore(object):
     
     
 #     #TODO: Appel crawler
-#     def crawl(self,):
+    def crawl(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
+        spider = apecSelenium('47179308','6KPA43V8','catia',["France Outre-Mer","Franche-Comte","Haute-Normandie","Ile-de-France","Languedoc-Roussillon"],"","","","",50)
+        crawler = Crawler(Settings())
+        crawler.configure()
+        crawler.crawl(spider)
+        crawler.start()
+        log.start()
+        reactor.run() #@UndefinedVariable
 #     
 #     #TODO: Telechargement des CVs
 #     
