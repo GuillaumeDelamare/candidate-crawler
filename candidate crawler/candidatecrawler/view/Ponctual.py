@@ -278,13 +278,13 @@ class CandidateCrawlerUI(object):
 
     def _entries_retriever(self):
         """Method to get user entries"""
-        self.keywords = self.keywords_entry.text()
+        self.keywords = self.trUtf8(self.keywords_entry.text())
         self.region = self.region_list.SelectedClicked
         self.mobilite = self.mobilite_combobox.currentText()
         self.salaire = self.salaire_combobox.currentText()
         self.disponibilite = self.disponibilite_list.SelectedClicked
         self.fraicheur = self.fraicheur_combobox.currentText()
-        self.nombreCV = tuple(self.cv_number_entry.text().split(','))
+        self.nombreCV = self.trUtf8(self.cv_number_entry.text())
         
     def _entries_checker(self):
         """Method to check user entries"""
@@ -346,9 +346,9 @@ class CandidateCrawlerUI(object):
 #                 self.progression_text.append("Fin du programme\n")
 #                 self._change_open_button_status(True)
         except:
-            self.progression_text.append("Oups, quelque chose s'est mal passé")
-            self.progression_text.append("Veuillez contacter l'admin")
-            self.progression_text.append("Fin du programme\n")
+            self.progression_text.append(self.trUtf8("Oups, quelque chose s'est mal passé"))
+            self.progression_text.append(self.trUtf8("Veuillez vérifier les champs de l'adiministration"))
+            self.progression_text.append(self.trUtf8("Fin du programme\n"))
             raise
 
 class CandidateCrawlerGUI(QtGui.QMainWindow, CandidateCrawlerUI):
