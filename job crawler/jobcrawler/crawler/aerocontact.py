@@ -21,7 +21,6 @@ from jobcrawler.core import toolbox
 
 ### Classes ###
 class AerocontactCrawler(object):
-
     def _aerocontact_crawler(self, keywords, daterange, region):
         """Crawler for Aerocontact"""
         site_list = []
@@ -83,6 +82,7 @@ class AerocontactCrawler(object):
                 pubtag = link.findNext("span", style='color: #777;')
                 if pubtag is not None:
                     pubdate = pubtag.contents[0]
+                    print(pubdate)
                     if pubdate is not None:
                         pubday = pubdate[0:2]
                         if pubday[0:1] == "0":
@@ -93,16 +93,9 @@ class AerocontactCrawler(object):
                         pubyear = pubdate[6:10]
                 else:
                     pubdate = toolbox.current_date()
-                    pubday = pubdate[0:2]
-                    if pubday[0:1] == "0":
-                        pubday = pubdate[1:2]
-                    pubmonth = pubdate[3:5]
-                    if pubmonth[0:1] == "0":
-                        pubmonth = pubdate[4:5]
-                    pubyear = pubdate[6:10]
 
                 link = link.get("href")
-                if toolbox.compute_duration(int(pubday),int(pubmonth),int(pubyear)) < daterange:
+                if toolbox.compute_duration(pubdate) < daterange:
                     site_list.append("{0}".format(link))
 
         site_list = list(set(site_list))
@@ -114,22 +107,8 @@ class AerocontactCrawler(object):
 
         return cleaned_site_list
 
-    def run_program(self,keywords=("dessinateur","catia"), daterange=3, region="Midi-Pyrénées"):
+    def run_program(self, keywords, daterange, region):
         """Method to run program"""
-        print("Crawling Aerocontact ...")
-
         aerocontact_result = self._aerocontact_crawler(keywords, daterange, region)
 
-        print("Aerocontact crawled")
-
         return aerocontact_result
-
-### End of Classes ###
-
-### Main program ###
-
-if __name__=='__main__':
-    runapp = AerocontactCrawler()
-    print(runapp.run_program())
-
-### End of Main program ###

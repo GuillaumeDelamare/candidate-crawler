@@ -156,10 +156,8 @@ class JobCrawlerUI(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
         # Values for combobox
-        staticsxmlfile = "statics.xml"
-
-        region_list = tuple(toolbox.xml_reader(staticsxmlfile, "regions").split(','))
-        domain_list = tuple(toolbox.xml_reader(staticsxmlfile, "domains").split(','))
+        region_list = tuple(toolbox.getconfigvalue("STATIC", "regions").split(','))
+        domain_list = tuple(toolbox.getconfigvalue("STATIC", "domains").split(','))
 
         for element in region_list:
             self.region_combobox.addItem(element)
@@ -201,9 +199,7 @@ class JobCrawlerUI(object):
         self.exit_action.setText(_translate("MainWindow", "Quitter", None))
         self.reset_action.setText(_translate("MainWindow", "Initialiser", None))
 
-
     # Methods for class JobCrawlerUI
-
     def about_window(self):
         """Method to generate About window"""
         self.aw = About_window_ponctual.AboutWindowGUI()
@@ -219,20 +215,19 @@ class JobCrawlerUI(object):
 
     def _entries_retriever(self):
         """Method to get user entries"""
-        self.ac = str(self.aerocontact_checkbox.isChecked())
-        self.aefc = str(self.aeroemploiformation_checkbox.isChecked())
-        self.apecc = str(self.apec_checkbox.isChecked())
-        self.caoec = str(self.caoemploi_checkbox.isChecked())
-        self.idc = str(self.indeed_checkbox.isChecked())
-        self.mc = str(self.monster_checkbox.isChecked())
-        self.poc = str(self.poleemploi_checkbox.isChecked())
-        self.rjc = str(self.regionjob_checkbox.isChecked())
+        self.ac = self.aerocontact_checkbox.isChecked()
+        self.aefc = self.aeroemploiformation_checkbox.isChecked()
+        self.apecc = self.apec_checkbox.isChecked()
+        self.caoec = self.caoemploi_checkbox.isChecked()
+        self.idc = self.indeed_checkbox.isChecked()
+        self.mc = self.monster_checkbox.isChecked()
+        self.poc = self.poleemploi_checkbox.isChecked()
+        self.rjc = self.regionjob_checkbox.isChecked()
         self.domain = self.domain_combobox.currentText()
         self.keywords = tuple(self.keywords_entry.text().split(','))
         self.queries = tuple(self.queries_entry.text().split(','))
         self.region = self.region_combobox.currentText()
         self.daterange = self.daterange_spinbox.value()
-        self.ml = tuple(self.mailing_list_entry.text().split(','))
 
     def _entries_checker(self):
         """Method to check user entries"""
@@ -246,12 +241,6 @@ class JobCrawlerUI(object):
         if self.queries[0] == "":
             error_code = True
             error_list.append("Veuillez entrer des critères de filtrage")
-
-        if self.ml[0] != "":
-            for element in self.ml:
-                if not "@" in element:
-                    error_code = True
-                    error_list.append("Une adresse e-mail semble mal formattée")
 
         return error_code, error_list
 
@@ -283,13 +272,12 @@ class JobCrawlerUI(object):
                 self.log_text.append("Programme stoppé")
 
                 return
+            
+            dbfile = toolbox.getconfigvalue("GENERAL", "dbfile")
+            exclude_list = toolbox.getconfigvalue("GENERAL", "excludes")
+            runapp = core.JobCrawlerCore(dbfile, exclude_list)
 
-            runapp = core.JobCrawlerCore()
-
-            self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
-                                                caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
-                                                domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region,\
-                                                daterange=self.daterange, mailing_list=self.ml, db_management = "True")
+            self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc, caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc, domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region, daterange=self.daterange, db_management = True)
 
             if len(self.new_links) > 50:
                 self.log_text.append("Trop d'annonces trouvées. Veuillez affiner vos critères")

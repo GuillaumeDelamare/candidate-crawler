@@ -109,8 +109,7 @@ class AdminWindowUI(object):
         self.profile_treewidget.setHeaderLabels(headers)
 
         ## Add Items:
-        staticsxmlfile = "statics.xml"
-        profilepath = toolbox.xml_reader(staticsxmlfile, "profilespath")
+        profilepath = toolbox.getconfigvalue("GENERAL", "profilespath")
 
         for name in os.listdir(profilepath):
             CustomTreeItem(self.profile_treewidget, name)
@@ -164,8 +163,7 @@ class AdminWindowUI(object):
         """Method to refresh profiles window"""
         self.profile_treewidget.clear()
 
-        staticsxmlfile = "statics.xml"
-        profilepath = toolbox.xml_reader(staticsxmlfile, "profilespath")
+        profilepath = toolbox.getconfigvalue("GENERAL", "profilespath")
 
         for name in os.listdir(profilepath):
             CustomTreeItem(self.profile_treewidget, name)
@@ -179,7 +177,7 @@ class AdminWindowGUI(QtGui.QMainWindow, AdminWindowUI):
         self.configxmltempfile = "Job_crawler_Config_temp.xml"
 
         self.db_entry.setText(toolbox.getconfigvalue("GENERAL", "dbfile"))
-        self.excludes_entry.setText(unicode(toolbox.getconfigvalue("GENERAL", "excludes")))
+        self.excludes_entry.setText(toolbox.getconfigvalue("GENERAL", "excludes"))
 
 class CustomTreeItem(QtGui.QTreeWidgetItem):
     '''Custom QTreeWidgetItem with Widgets'''
@@ -218,8 +216,7 @@ class CustomTreeItem(QtGui.QTreeWidgetItem):
         """Method to refresh profiles window"""
         self.profile_tree.clear()
 
-        staticsxmlfile = "statics.xml"
-        profilepath = toolbox.xml_reader(staticsxmlfile, "profilespath")
+        profilepath = toolbox.getconfigvalue("GENERAL", "profilespath")
 
         for name in os.listdir(profilepath):
             CustomTreeItem(self.profile_tree, name)
