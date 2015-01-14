@@ -98,6 +98,6 @@ class apecSelenium(InitSpider):
         #TODO:
         
         """Fermeture de la fenetre"""
-        #driver.close()
-        
+        driver.close()
+        return "toto"
         
