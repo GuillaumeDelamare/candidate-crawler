@@ -6,35 +6,24 @@
 # Crawl some website to find interesting jobs #
 ###############################################
 
-### External modules importation ###
-
-import re
-import urllib
-import bs4
-
-### End of external modules importation ###
-
-### Custom modules importation ###
-
-from jobcrawler.core import dbmanagement, toolbox, myEmail
+import re, urllib, bs4
+from jobcrawler.core import dbmanagement
 from jobcrawler.crawler import aerocontact, aeroemploiformation, apec, caoemploi, indeed, monster, poleemploi, regionjob
 
 ### End of custom modules importation ###
 
 ### Classes ###
 class JobCrawlerCore(object):
+    def __init__(self, dbfile, exclude_list, max_store_day=40):
+        self.dbfile = dbfile
+        self.exclude_list = exclude_list
+        self.max_store_day = max_store_day
 
     def _values_initializer(self):
         """Method to initialize variables"""
-        self.configxmlfile = "Config.xml"
-        self.dbfile = toolbox.xml_reader(self.configxmlfile, "dbfile").replace("\\","\\")
-        self.exclude_list = tuple(toolbox.xml_reader(self.configxmlfile, "excludes").split(','))
-
         self.newlinks_list = []
         self.final_links_list = []
-
-        self.max_store_day = 40
-
+        
     def _links_management(self, linklist, queries):
         """Method to manage links in global list"""
         sorted_links_list = []
@@ -75,59 +64,50 @@ class JobCrawlerCore(object):
 
         self.final_links_list = list(set(self.final_links_list))
 
-    def run_program(self, profile_name="", acc="True", aefc="True", apecc="True", caoec="True", ic="True", mc="True", poc="True",\
-                    rjc="True", domain="Engineering", keywords=("dessinateur","catia"), queries=("catia","meca"), region="Midi-Pyrénées",\
-                    daterange=3, mailing_list=("",), db_management = "False"):
+    def run_program(self, profile_name="", acc=True, aefc=True, apecc=True, caoec=True, ic=True, mc=True, poc=True, rjc=True,\
+                    domain="Engineering", keywords=("dessinateur","catia"), queries=("catia","meca"), region="Midi-Pyrénées",\
+                    daterange=3, db_management=False):
         """Method to run program"""
-        print("Launching core program")
-
         self._values_initializer()
 
-        if acc == "True":
+        if acc:
             runacc = aerocontact.AerocontactCrawler()
             for link in runacc.run_program(keywords,daterange,region):
                 self.newlinks_list.append(link)
-        if aefc == "True":
+        if aefc:
             runaefc = aeroemploiformation.AeroemploiformationCrawler()
             for link in runaefc.run_program(domain,region):
                 self.newlinks_list.append(link)
-        if apecc == "True":
+        if apecc:
             runapecc = apec.ApecCrawler()
             for link in runapecc.run_program(keywords,daterange,region):
                 self.newlinks_list.append(link)
-        if caoec == "True":
+        if caoec:
             runcaoec = caoemploi.CaoemploiCrawler()
             for link in runcaoec.run_program(region):
                 self.newlinks_list.append(link)
-        if ic == "True":
+        if ic:
             runic = indeed.IndeedCrawler()
             for link in runic.run_program(keywords,daterange,region):
                 self.newlinks_list.append(link)
-        if mc == "True":
+        if mc:
             runmc = monster.MonsterCrawler()
             for link in runmc.run_program(keywords,daterange,region):
                 self.newlinks_list.append(link)
-        if poc == "True":
+        if poc:
             runpoc = poleemploi.PoleemploiCrawler()
             for link in runpoc.run_program(keywords,daterange,region):
                 self.newlinks_list.append(link)
-        if rjc == "True":
+        if rjc:
             runrjc = regionjob.RegionjobCrawler()
             for link in runrjc.run_program(domain,daterange,region):
                 self.newlinks_list.append(link)
 
         self._links_management(self.newlinks_list, queries)
 
-        if db_management == "True":
+        if db_management:
             dbmanagement.write_database(self.dbfile, self.final_links_list)
             dbmanagement.clean_database(self.dbfile, self.max_store_day)
-
-        if mailing_list[0] != "":
-            runmail = myEmail.JobCrawlerEmail()
-            runmail.run_program(profile_name, mailing_list, self.final_links_list)
-
-        print("{0} new jobs found".format(len(self.final_links_list)))
-        print("Done\n")
 
         return self.final_links_list
 

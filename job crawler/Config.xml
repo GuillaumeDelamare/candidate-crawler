@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<config>
-    <dbfile>C:/Users/Pierre/Documents/EMN/Mission courte/Concept/database.csv</dbfile>
-    <excludes>interim,intérim,commercial</excludes>
-</config>

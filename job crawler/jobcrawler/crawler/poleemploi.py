@@ -87,13 +87,9 @@ class PoleemploiCrawler(object):
 
         return site_list
 
-    def run_program(self,keywords=("dessinateur","catia"), daterange=3, region="Midi-Pyrénées"):
+    def run_program(self,keywords, daterange, region):
         """Method to run program"""
-        print("Crawling Pole emploi ...")
-
         poleemploi_result = self._poleemploi_crawler(keywords, daterange, region)
-
-        print("Pole emploi crawled")
 
         return poleemploi_result
 

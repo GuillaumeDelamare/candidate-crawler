@@ -17,6 +17,7 @@ import csv
 ### Custom modules importation ###
 
 from jobcrawler.core import toolbox
+from datetime import datetime
 
 ### End of custom modules importation ###
 
@@ -44,7 +45,7 @@ def write_database(dbfile, linklist):
     write_database = csv.writer(csv_file, delimiter=',')
 
     for line in linklist:
-        write_database.writerow([toolbox.current_date(),line])
+        write_database.writerow([toolbox.current_date().strftime("%d-%m-%Y"),line])
 
     csv_file.close()
 

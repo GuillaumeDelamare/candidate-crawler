@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<statics>
-    <regions>Toute la France,Alsace,Aquitaine,Auvergne,Basse-Normandie,Bourgogne,Bretagne,Centre,Champagne-Ardenne,Franche-Comté,Haute-Normandie,Ile-de-France,Languedoc-Roussillon,Limousin,Lorraine,Midi-Pyrénées,Nord-Pas-de-Calais,Pays de la Loire,Picardie,Poitou-Charentes,PACA,Rhône-Alpes</regions>
-    <domains>Engineering,Info-Hardware,Info-Helpdesk,Info-Software</domains>
-    <profilespath>./predefined_searches</profilespath>
-</statics>
