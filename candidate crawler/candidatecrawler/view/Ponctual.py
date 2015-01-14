@@ -69,7 +69,7 @@ class CandidateCrawlerUI(object):
          
         ###Région### 
         self.region_label = QtGui.QLabel(self.centralwidget)
-        self.region_label.setText(_translate("AdminWindow", "Région (maximum 5 choix)", None))
+        self.region_label.setText(_translate("AdminWindow", "Région (5 choix maximum)", None))
                         
         self.region_list = QtGui.QListView(self.centralwidget)
         
