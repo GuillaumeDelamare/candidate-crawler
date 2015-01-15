@@ -24,9 +24,10 @@ class CandidateCrawlerCore(object):
     disponibilite = ""
     fraicheur = ""
     nombreCV = 50 
+    login =""
+    password=""
     
-    
-    def __init__(self,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
+    def __init__(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
         """Initialisation du spider"""
         
         self.keyword = keyword 
@@ -36,12 +37,13 @@ class CandidateCrawlerCore(object):
         self.disponibilite = disponibilite
         self.fraicheur = fraicheur
         self.nombreCV = nombreCV
-         
+        self.login=login
+        self.password=password
     
     
     
 #     #TODO: Appel crawler
-    def crawl(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
+    def crawl(self):
         
 #         print(login)
 #         print(password)
@@ -53,7 +55,7 @@ class CandidateCrawlerCore(object):
 #         print(fraicheur)
 #         print(nombreCV)
         
-        spider = apecSelenium(login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV)
+        spider = apecSelenium(self.login,self.password,self.keyword,self.region,self.mobilite,self.salaire,self.disponibilite,self.fraicheur,self.nombreCV)
         crawler = Crawler(Settings())
         crawler.configure()
         crawler.crawl(spider)

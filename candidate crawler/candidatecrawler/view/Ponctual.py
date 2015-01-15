@@ -20,7 +20,7 @@ from candidatecrawler.view.window import About_window
 from candidatecrawler.view.window import Admin_window
 from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem, QBoxLayout
 from PyQt4.QtCore import QSize, QVariant
-from PyQt4.Qt import Qt
+from PyQt4.Qt import Qt, QAbstractItemView
 
 
 ### End of custom modules importation ###
@@ -71,6 +71,7 @@ class CandidateCrawlerUI(object):
         self.region_label.setText(_translate("AdminWindow", "Région (5 choix maximum)", None))
                         
         self.region_list = QtGui.QListView(self.centralwidget)
+        self.region_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         
         self.vbox_region = QtGui.QVBoxLayout()
         self.vbox_region.addWidget(self.region_label)
@@ -279,10 +280,15 @@ class CandidateCrawlerUI(object):
     def _entries_retriever(self):
         """Method to get user entries"""
         self.keywords = self.trUtf8(self.keywords_entry.text())
-        self.region = self.region_list.SelectedClicked
+        
+        indexes = self.region_list.selectedIndexes()
+        regions = []
+        for i in indexes:
+            regions.append(i)
+        self.region = regions
         self.mobilite = self.mobilite_combobox.currentText()
         self.salaire = self.salaire_combobox.currentText()
-        self.disponibilite = self.disponibilite_list.SelectedClicked
+        self.disponibilite = self.disponibilite_list.selectedIndexes()
         self.fraicheur = self.fraicheur_combobox.currentText()
         self.nombreCV = self.trUtf8(self.cv_number_entry.text())
         
@@ -331,8 +337,20 @@ class CandidateCrawlerUI(object):
 
                 return
             
-            runapp = core.CandidateCrawlerCore(self.keywords, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
-            runapp.crawl(toolbox.getconfigvalue("APEC", "login"), toolbox.getconfigvalue("APEC", "password"), self.keywords, self.region, self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
+            runapp = core.CandidateCrawlerCore(toolbox.getconfigvalue("APEC", "login"), toolbox.getconfigvalue("APEC", "password"),self.keywords, self.region
+                                               , self.mobilite, self.salaire, self.disponibilite, self.fraicheur, self.nombreCV)
+            print(self.keywords)
+            print(self.region)
+            print(self.mobilite)
+            #print(self.salaire)
+            print(self.disponibilite)
+            print(self.fraicheur)
+            print(self.nombreCV)
+            
+            
+            
+            
+            #runapp.crawl()
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
 #                                                 domain=self.domain, keywords=self.keywords, region=self.region,\
