@@ -71,8 +71,7 @@ class CandidateCrawlerUI(object):
         self.region_label.setText(_translate("AdminWindow", "Région (5 choix maximum)", None))
                         
         self.region_list = QtGui.QListView(self.centralwidget)
-        self.region_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
-        
+               
         self.vbox_region = QtGui.QVBoxLayout()
         self.vbox_region.addWidget(self.region_label)
         self.vbox_region.addWidget(self.region_list)
@@ -207,7 +206,7 @@ class CandidateCrawlerUI(object):
             item.setData(QVariant(Qt.Unchecked), Qt.CheckStateRole)
             self.model.appendRow(item)
         self.region_list.setModel(self.model)
-        
+
         self.model2 = QStandardItemModel(self.disponibilite_list)
         for disponibilite in disponibilite_list:
             item = QStandardItem(disponibilite)
@@ -216,8 +215,6 @@ class CandidateCrawlerUI(object):
             self.model2.appendRow(item)
         self.disponibilite_list.setModel(self.model2)
          
-
-
         for element in mobilite_list:
             self.mobilite_combobox.addItem(element)
         
@@ -228,7 +225,7 @@ class CandidateCrawlerUI(object):
         for element in fraicheur_list:
             self.fraicheur_combobox.addItem(element)
             
-            
+         
 
         # Action attached to buttons
         ####################################################################
@@ -239,6 +236,7 @@ class CandidateCrawlerUI(object):
         self.run_button.clicked.connect(self.run_program)
         self.keywords_help.clicked.connect(self.ouvrirDialogue)
         
+
         
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Candidate Crawler APEC", None))
@@ -277,18 +275,26 @@ class CandidateCrawlerUI(object):
         #TODO trUtf8 is deprecated
         QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés en les séparant par des espaces."))
 
+    
     def _entries_retriever(self):
         """Method to get user entries"""
         self.keywords = self.trUtf8(self.keywords_entry.text())
+    
+        self.region = []
+        for row in range(self.model.rowCount()):
+            item = self.model.item(row)
+            if item.checkState() == QtCore.Qt.Checked:
+                self.region = [str(item.text())]+self.region
         
-        indexes = self.region_list.selectedIndexes()
-        regions = []
-        for i in indexes:
-            regions.append(i)
-        self.region = regions
         self.mobilite = self.mobilite_combobox.currentText()
         self.salaire = self.salaire_combobox.currentText()
-        self.disponibilite = self.disponibilite_list.selectedIndexes()
+        
+        self.disponibilite = []
+        for row in range(self.model2.rowCount()):
+            item = self.model2.item(row)
+            if item.checkState() == QtCore.Qt.Checked:
+                self.disponibilite = [str(item.text())]+self.disponibilite
+
         self.fraicheur = self.fraicheur_combobox.currentText()
         self.nombreCV = self.trUtf8(self.cv_number_entry.text())
         
@@ -308,14 +314,6 @@ class CandidateCrawlerUI(object):
 
         return error_code, error_list
 
-#     def _open_in_browser(self):
-#         """Method to open all requested links in browser"""
-#         for link in self.new_links:
-#             webbrowser.open(link)
-
-#     def _change_open_button_status(self, status):
-#         """Method to change open button status"""
-#         self.open_in_browser_button.setEnabled(status)
 
     def run_program(self):
         """Method to run program on tab1: ponctual search"""
