@@ -10,6 +10,7 @@ class apecSelenium(InitSpider):
     allowed_domains = ["recruteurs.apec.fr"]
     start_urls = ["http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"]
     baseurl = "http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"
+   
     """parametre du spider"""
     login = "47179308"
     password = "6KPA43V8"
@@ -20,12 +21,16 @@ class apecSelenium(InitSpider):
     disponibilite = []
     fraicheur = 0
     nombreCV = 50 
+    
     """Instance propre au site de l'APEC"""
     regions=["Toute la France","Alsace","Aquitaine","Auvergne","Basse-Normandie","Bourgogne","Bretagne","Centre","Champagne","Corse",
              "France Outre-Mer", "Franche-Comté","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
              "Limousin","Lorraine","Midi-Pyrénées","Nord-Pas-de-Calais",
              "PACA","Pays de La Loire","Picardie","Poitou-Charentes","Rhône-Alpes"]
     disponibilites = ['0','1','2','3']
+    
+    """Aretourner"""
+    listeLienCV = []
     
     
     def __init__(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
@@ -143,19 +148,17 @@ class apecSelenium(InitSpider):
         mouse100CVs = webdriver.ActionChains(driver)
         mouse100CVs.move_to_element(boutton100CVs[3]).click().perform()
         
-          
+        
         """Enregistrer les liens des CVs a telecharger"""
         #TODO
-#         hxs = Selector('driver.current_url()')
-#         res = list()
-#         rows = hxs.xpath("//div[@id='chenillard']")
-#         print(rows[0])
-#         print(len(rows))
-#         for row in rows:
-#             url = row.extract()
-#             res = res.append(url)
-#         print(res)    
-#         return res
-#           
-#         """Fermeture de la fenetre"""
-#         driver.close()
+        compteur = 0
+        boutonCVs = driver.find_elements_by_css_selector('.titreCV>dl>dt>a')
+        hxs = Selector('driver.current_url()')
+        rows = hxs.xpath("//div[@id='chenillard']")
+        for row in rows:
+            url = row.extract()
+            self.listeLienCV.append(url)
+
+          
+        """Fin du crawling"""
+        driver.close()
