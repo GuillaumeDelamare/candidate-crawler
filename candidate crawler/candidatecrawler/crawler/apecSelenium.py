@@ -2,7 +2,8 @@
 
 from selenium import webdriver
 from scrapy.contrib.spiders.init import InitSpider
-from scrapy.selector import Selector
+from selenium.webdriver.common.keys import Keys
+import time
 
 class apecSelenium(InitSpider):
     """congig du spider"""
@@ -11,17 +12,6 @@ class apecSelenium(InitSpider):
     start_urls = ["http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"]
     baseurl = "http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"
    
-    """parametre du spider"""
-    login = "47179308"
-    password = "6KPA43V8"
-    keyword = ""
-    region = []
-    mobilite = 0
-    salaire = 0
-    disponibilite = []
-    fraicheur = 0
-    nombreCV = 50 
-    
     """Instance propre au site de l'APEC"""
     regions=["Toute la France","Alsace","Aquitaine","Auvergne","Basse-Normandie","Bourgogne","Bretagne","Centre","Champagne","Corse",
              "France Outre-Mer", "Franche-Comté","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
@@ -30,6 +20,7 @@ class apecSelenium(InitSpider):
     disponibilites = ['0','1','2','3']
     
     """Aretourner"""
+    listePageCV = []
     listeLienCV = []
     
     
@@ -149,16 +140,36 @@ class apecSelenium(InitSpider):
         mouse100CVs.move_to_element(boutton100CVs[3]).click().perform()
         
         
-        """Enregistrer les liens des CVs a telecharger"""
-        #TODO
+        """Enregistrer les liens des pages des CVs a telecharger"""
         compteur = 0
         boutonCVs = driver.find_elements_by_css_selector('.titreCV>dl>dt>a')
-        hxs = Selector('driver.current_url()')
-        rows = hxs.xpath("//div[@id='chenillard']")
-        for row in rows:
-            url = row.extract()
-            self.listeLienCV.append(url)
-
-          
-        """Fin du crawling"""
-        driver.close()
+        clicOnglets = []
+      
+        
+ 
+        while compteur < len(boutonCVs):
+            main_window = driver.current_window_handle
+            clicOnglets.append(webdriver.ActionChains(driver))
+            clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
+            clicOnglets[compteur].click(boutonCVs[compteur])
+            clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
+            clicOnglets[compteur].perform()
+            driver.switch_to_window(driver.current_window_handle)
+            #TODO
+            time.sleep(3)
+            driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
+            driver.switch_to_window(driver.current_window_handle)
+            compteur = compteur + 1
+            
+#         print(self.nombreCV)
+#         while compteur in xrange(0,int(self.nombreCV)-1) and compteur < len(boutonCVs):
+#             self.listePageCV.append(boutonCVs[compteur].get_attribute("href"))
+#             compteur = compteur + 1
+#             
+#         """Parcoure les pages de telechargement desCVs"""
+#         compteur2 = 0
+#         while compteur2 < len(self.listePageCV):
+#             driver.get(self.listePageCV[compteur2])
+#             compteur2 = compteur2 + 1
+#         """Fin du crawling"""
+#         driver.close()
