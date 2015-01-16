@@ -6,20 +6,9 @@
 # Crawl Pole emploi to find interesting jobs #
 ##############################################
 
-### External modules importation ###
-
-import re
-import bs4
-
-### End of external modules importation ###
-
-### Custom modules importation ###
-
+import re, bs4
 from jobcrawler.core import toolbox
 
-### End of custom modules importation ###
-
-### Classes ###
 class PoleemploiCrawler(object):
     def __init__(self):
         self.webdomain = "candidat.pole-emploi.fr"
@@ -73,12 +62,6 @@ class PoleemploiCrawler(object):
 
         return poleemploi_result
 
-### End of Classes ###
-
-### Main program ###
-
 if __name__=='__main__':
     runapp = PoleemploiCrawler()
     print(runapp.run_program(["Java"], 3, "Pays de la Loire"))
-
-### End of Main program ###

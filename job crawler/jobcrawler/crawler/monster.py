@@ -48,7 +48,7 @@ class MonsterCrawler(object):
         region_code = self.regions[region]
 
         for keyword in keywords:
-            uri = "/rechercher/{0}+CDI_548?tm={1}&where={2}".format(keyword, daterange, region_code)
+            uri = "/offres-d-emploi/?tm={1}&q={0}&where={2}".format(keyword, daterange, region_code)
             soup = bs4.BeautifulSoup(toolbox.html_reader(self.webdomain, uri))
             
             for link in soup.find_all(href=re.compile("offre-emploi")):
@@ -58,8 +58,12 @@ class MonsterCrawler(object):
 
         return site_list
 
-    def run_program(self,keywords, daterange, region):
+    def run_program(self, keywords, daterange, region):
         """Method to run program"""
         monster_result = self._monster_crawler(keywords, daterange, region)
 
         return monster_result
+    
+if __name__=='__main__':
+    runapp = MonsterCrawler()
+    print(runapp.run_program(["Java"], 3, "Pays de la Loire"))
