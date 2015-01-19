@@ -4,6 +4,8 @@ from selenium import webdriver
 from scrapy.contrib.spiders.init import InitSpider
 from selenium.webdriver.common.keys import Keys
 import time
+import os
+
 
 class apecSelenium(InitSpider):
     """congig du spider"""
@@ -28,19 +30,43 @@ class apecSelenium(InitSpider):
         """Initialisation du spider"""
         self.login = login
         self.password = password
-        self.keyword = keyword
-        self.region = region
-        self.mobilite = mobilite
-        self.salaire = salaire
-        self.disponibilite = disponibilite
-        self.fraicheur = fraicheur
+        self.keyword = str(keyword)
+        self.region = []
+        for i in region:
+            self.region.append(str(i))
+        self.mobilite = str(mobilite)
+        self.salaire = str(salaire)
+        self.fraicheur = str(fraicheur)
         self.nombreCV = nombreCV
+        self.disponibilite = []
+        
+        
+        if disponibilite.__contains__("Immediate"):
+            self.disponibilite.append(0)
+            
+        if disponibilite.__contains__( "Moins de 3 mois"):
+            self.disponibilite.append(1)
+            
+        if disponibilite.__contains__( "Entre 3 et 6 mois"):
+            self.disponibilite.append(2)
+            
+        if disponibilite.__contains__( "Plus de 6 mois"):
+            self.disponibilite.append(3) 
         
         
     
     def parse(self, response):
         """"Lancement du driver"""
+#
+        driver = webdriver.Firefox()        
+      #  profile = webdriver.FirefoxProfile()
+       # driver.profile.set_preference("driver.download.folderList", 2)
+        driver.profile.set_preference("driver.download.manager.showWhenStarting", False)
+       # driver.profile.set_preference("driver.download.dir", 'C:/Utilisateur/Jonathan/Téléchargement')
+        driver.profile.set_preference("driver.helperApps.neverAsk.saveToDisk", 'application/pdf')
+
         driver = webdriver.Firefox()
+        
         #driver.set_window_position(-2000, -3000)
         driver.get(self.baseurl)
         
@@ -145,21 +171,22 @@ class apecSelenium(InitSpider):
         boutonCVs = driver.find_elements_by_css_selector('.titreCV>dl>dt>a')
         clicOnglets = []
       
-        
- 
-        while compteur < len(boutonCVs):
-            main_window = driver.current_window_handle
-            clicOnglets.append(webdriver.ActionChains(driver))
-            clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
-            clicOnglets[compteur].click(boutonCVs[compteur])
-            clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
-            clicOnglets[compteur].perform()
-            driver.switch_to_window(driver.current_window_handle)
-            #TODO
-            time.sleep(3)
-            driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
-            driver.switch_to_window(driver.current_window_handle)
-            compteur = compteur + 1
+        webdriver.ActionChains(driver).click(boutonCVs[compteur]).perform()
+        b=driver.find_element_by_css_selector(".cvDownload>a")
+        webdriver.ActionChains(driver).click(b).perform()
+#         while compteur < len(boutonCVs):
+#             main_window = driver.current_window_handle
+#             clicOnglets.append(webdriver.ActionChains(driver))
+#             clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
+#             clicOnglets[compteur].click(boutonCVs[compteur])
+#             clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
+#             clicOnglets[compteur].perform()
+#             driver.switch_to_window(driver.current_window_handle)
+#             #TODO
+#             time.sleep(3)
+#             driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
+#             driver.switch_to_window(main_window)
+#             compteur = compteur + 1
             
 #         print(self.nombreCV)
 #         while compteur in xrange(0,int(self.nombreCV)-1) and compteur < len(boutonCVs):
