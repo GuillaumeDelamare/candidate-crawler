@@ -8,7 +8,7 @@ import os
 
 
 class apecSelenium(InitSpider):
-    """congig du spider"""
+    """config du spider"""
     name = "product_spider"
     allowed_domains = ["recruteurs.apec.fr"]
     start_urls = ["http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"]
@@ -57,17 +57,14 @@ class apecSelenium(InitSpider):
     
     def parse(self, response):
         """"Lancement du driver"""
-#
-        driver = webdriver.Firefox()        
-      #  profile = webdriver.FirefoxProfile()
-       # driver.profile.set_preference("driver.download.folderList", 2)
-        driver.profile.set_preference("driver.download.manager.showWhenStarting", False)
-       # driver.profile.set_preference("driver.download.dir", 'C:/Utilisateur/Jonathan/Téléchargement')
-        driver.profile.set_preference("driver.helperApps.neverAsk.saveToDisk", 'application/pdf')
-
-        driver = webdriver.Firefox()
-        
-        #driver.set_window_position(-2000, -3000)
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference("browser.download.folderList",2)
+        profile.set_preference("browser.download.manager.showWhenStarting",False)
+        profile.set_preference("browser.download.dir", os.getcwd() + 'CV') #TODO définir le dossier de destination
+        profile.set_preference("pdfjs.disabled",True)
+        profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        driver = webdriver.Firefox(firefox_profile=profile)
+        driver.set_window_position(-2000, -3000)
         driver.get(self.baseurl)
         
         """Login"""
@@ -166,37 +163,36 @@ class apecSelenium(InitSpider):
         mouse100CVs.move_to_element(boutton100CVs[3]).click().perform()
         
         
-        """Enregistrer les liens des pages des CVs a telecharger"""
-        compteur = 0
+        """Sauvergarde les CVs et crée le Excel"""
         boutonCVs = driver.find_elements_by_css_selector('.titreCV>dl>dt>a')
+        
         clicOnglets = []
-      
-        webdriver.ActionChains(driver).click(boutonCVs[compteur]).perform()
-        b=driver.find_element_by_css_selector(".cvDownload>a")
-        webdriver.ActionChains(driver).click(b).perform()
-#         while compteur < len(boutonCVs):
-#             main_window = driver.current_window_handle
-#             clicOnglets.append(webdriver.ActionChains(driver))
-#             clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
-#             clicOnglets[compteur].click(boutonCVs[compteur])
-#             clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
-#             clicOnglets[compteur].perform()
-#             driver.switch_to_window(driver.current_window_handle)
-#             #TODO
-#             time.sleep(3)
-#             driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
-#             driver.switch_to_window(main_window)
-#             compteur = compteur + 1
+        compteur = 0
+        
+        
+        while compteur in xrange(0,int(self.nombreCV)) and compteur < len(boutonCVs): #va
+            #permet d'ouvrir les onglets et d'aller sur les pages des CVs
+            main_window = driver.current_window_handle
+            clicOnglets.append(webdriver.ActionChains(driver))
+            clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
+            clicOnglets[compteur].click(boutonCVs[compteur])
+            clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
+            clicOnglets[compteur].perform()
+            driver.switch_to_window(driver.current_window_handle)
             
-#         print(self.nombreCV)
-#         while compteur in xrange(0,int(self.nombreCV)-1) and compteur < len(boutonCVs):
-#             self.listePageCV.append(boutonCVs[compteur].get_attribute("href"))
-#             compteur = compteur + 1
-#             
-#         """Parcoure les pages de telechargement desCVs"""
-#         compteur2 = 0
-#         while compteur2 < len(self.listePageCV):
-#             driver.get(self.listePageCV[compteur2])
-#             compteur2 = compteur2 + 1
-#         """Fin du crawling"""
-#         driver.close()
+            #action qui se déroule sur la page du CV (excel, telechargement)
+            #telechargement du CV
+            telechargeCV = driver.find_element_by_css_selector(".cvDownload>a")
+            webdriver.ActionChains(driver).click(telechargeCV).perform()
+            time.sleep(2)
+            
+            #entre les champs dans le excel
+            #TODO
+            
+            #referme l'ongler dans lequel on a travaillé et incrémente
+            driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
+            driver.switch_to_window(main_window)
+            compteur = compteur + 1
+            
+        """Fin du crawling"""
+        driver.close()
