@@ -55,16 +55,17 @@ class JobCrawlerCore(object):
                     if not criteria_found:
                         error_code = True
 
-            except:
+            except Exception as e:
                 error_code = True
                 print("Error on link {0}".format(link))
+                print(e)
 
             if not error_code:
                 self.final_links_list.append(link)
 
         self.final_links_list = list(set(self.final_links_list))
 
-    def run_program(self, profile_name="", acc=True, aefc=True, apecc=True, caoec=True, ic=True, mc=True, poc=True, rjc=True,\
+    def run_program(self, acc=True, aefc=True, apecc=True, caoec=True, ic=True, mc=True, poc=True, rjc=True,\
                     domain="Engineering", keywords=("dessinateur","catia"), queries=("catia","meca"), region="Midi-Pyrénées",\
                     daterange=3, db_management=False):
         """Method to run program"""

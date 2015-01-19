@@ -12,7 +12,7 @@ from datetime import datetime
 
 class ApecCrawler(object):
     def __init__(self):
-        selfwebdomain = "cadres.apec.fr"
+        self.webdomain = "cadres.apec.fr"
         self.regions = {"Toute la France": "",
                         "Alsace": "&region=700",
                         "Aquitaine": "&region=701",
@@ -46,7 +46,6 @@ class ApecCrawler(object):
 
         region_code = self.regions[region]
        
-
         for keyword in keywords:
             uri = u"/MesOffres/RechercheOffres/ApecRechercheOffre.jsp?keywords={0}{1}".format(keyword, region_code)
             soup = bs4.BeautifulSoup(toolbox.html_reader(self.webdomain,uri))
@@ -55,12 +54,14 @@ class ApecCrawler(object):
                 try:
                     fmt = "Parue le %d/%m/%y"
                     pubdate = pubtag.contents[0]
-                    pubdate = datetime.strptime(pubdate[:17], fmt)
+                    pubdate = datetime.strptime(pubdate[:17], fmt).date()
                 except:
-                    pubdate = toolbox.current_date()
+                    pubdate = datetime.date.today()
                     
                 link = re.sub(("\?(.*?)$"),'',link.get("href"))
+                print(link)
                 if toolbox.compute_duration(pubdate) < daterange:
+                    print("added")
                     site_list.append("http://{0}{1}".format(self.webdomain,link))
 
         site_list = list(set(site_list))
@@ -71,3 +72,8 @@ class ApecCrawler(object):
         """Method to run program"""
         apec_result = self._apec_crawler(keywords, daterange, region)
         return apec_result
+
+
+if __name__=='__main__':
+    runapp = ApecCrawler()
+    print(runapp.run_program(["Java"], 3, "Pays de la Loire"))

@@ -6,58 +6,39 @@
 # Crawl some website to find interesting jobs #
 ###############################################
 
-### External modules importation ###
-
-import os
-import shutil
 import csv
-
-### End of external modules importation ###
-
-### Custom modules importation ###
-
 from jobcrawler.core import toolbox
-from datetime import datetime
-
-### End of custom modules importation ###
-
-### Functions ###
+from datetime import datetime, date
 
 def read_database(dbfile, usage="all"):
     """Read CSV database"""
+    #TODO voir pour supprimer le usage
     csv_content = []
-    read_database = csv.reader(open(dbfile,"r"), delimiter=',')
+    
+    read_database = csv.reader(open(dbfile,"rb"), delimiter=',')
 
     for line in read_database:
         if usage == "date":
-            csv_content.append(str(line[0]).strip("[]"))
+            csv_content.append(line[0].strip("[]"))
         elif usage == "links":
-            csv_content.append(str(line[1]).strip("[]"))
+            csv_content.append(line[1].strip("[]"))
         elif usage == "all":
-            csv_content.append(str(line).replace("[]"))
+            csv_content.append(line)
 
     return csv_content
 
 def write_database(dbfile, linklist):
     """Write CSV database"""
-    csv_file = open(dbfile,"a")
-
-    write_database = csv.writer(csv_file, delimiter=',')
-
-    for line in linklist:
-        write_database.writerow([toolbox.current_date().strftime("%d-%m-%Y"),line])
-
-    csv_file.close()
-
+    with open(dbfile,"ab") as csv_file:
+        database = csv.writer(csv_file, delimiter=',')
+        
+        today = date.today().strftime("%d-%m-%Y")
+        for link in linklist:
+            database.writerow([today, link])
+    
 def clean_database(dbfile, max_store_day):
     """Clean CSV database"""
     cleaned_csv_content = [["DATE","LINK"]]
-    
-    # Create a backup
-    backupfile = "{0}.backup".format(dbfile[0:-4])
-    if os.path.isfile(backupfile):
-        os.remove(backupfile)
-    shutil.copy(dbfile,backupfile)
     
     # Read database
     csv_content = read_database(dbfile)
@@ -66,17 +47,11 @@ def clean_database(dbfile, max_store_day):
     # Filter on date
     fmt = "%d-%m-%Y"
     for element in csv_content:
-        date = datetime.strptime(element[0], fmt)
+        date = datetime.strptime(element[0], fmt).date()
 
         if toolbox.compute_duration(date) < max_store_day:
             cleaned_csv_content.append(element)
 
-    csv_file = open(dbfile,"w")
-    write_database = csv.writer(csv_file, delimiter=',')
-
-    for line in cleaned_csv_content:
-        write_database.writerow([line[0],line[1]])
-
-    csv_file.close()
-
-### End of Functions ###
+    with open(dbfile,"wb") as csv_file:
+        database = csv.writer(csv_file, delimiter=',')
+        database.writerows(cleaned_csv_content)

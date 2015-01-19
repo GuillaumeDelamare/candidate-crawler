@@ -223,10 +223,10 @@ class JobCrawlerUI(object):
         self.mc = self.monster_checkbox.isChecked()
         self.poc = self.poleemploi_checkbox.isChecked()
         self.rjc = self.regionjob_checkbox.isChecked()
-        self.domain = self.domain_combobox.currentText()
+        self.domain = str(self.domain_combobox.currentText())
         self.keywords = tuple(self.keywords_entry.text().split(','))
-        self.queries = tuple(self.queries_entry.text().split(','))
-        self.region = self.region_combobox.currentText()
+        self.queries = tuple(str(self.queries_entry.text()).split(','))
+        self.region = str(self.region_combobox.currentText())
         self.daterange = self.daterange_spinbox.value()
 
     def _entries_checker(self):
@@ -274,10 +274,10 @@ class JobCrawlerUI(object):
                 return
             
             dbfile = toolbox.getconfigvalue("GENERAL", "dbfile")
-            exclude_list = toolbox.getconfigvalue("GENERAL", "excludes")
+            exclude_list = toolbox.getconfigvalue("GENERAL", "excludes").split(',')
             runapp = core.JobCrawlerCore(dbfile, exclude_list)
 
-            self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc, caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc, domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region, daterange=self.daterange, db_management = True)
+            self.new_links = runapp.run_program(acc=self.ac, aefc=self.aefc, apecc=self.apecc, caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc, domain=self.domain, keywords=self.keywords, queries=self.queries, region=self.region, daterange=self.daterange, db_management = True)
 
             if len(self.new_links) > 50:
                 self.log_text.append("Trop d'annonces trouvées. Veuillez affiner vos critères")
