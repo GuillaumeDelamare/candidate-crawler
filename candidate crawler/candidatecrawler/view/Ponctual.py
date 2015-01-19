@@ -348,7 +348,7 @@ class CandidateCrawlerUI(object):
             
             
             
-            #runapp.crawl()
+            runapp.crawl()
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
 #                                                 domain=self.domain, keywords=self.keywords, region=self.region,\
