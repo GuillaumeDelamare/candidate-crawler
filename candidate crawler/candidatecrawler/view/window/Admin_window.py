@@ -12,6 +12,7 @@ import sys
 from PyQt4 import QtCore, QtGui
 from PyQt4.QtGui import QSizePolicy, QBoxLayout, QGroupBox, QGridLayout
 from candidatecrawler.core import toolbox
+import os
 
 ### End of external modules importation ###
 try:
@@ -41,6 +42,7 @@ class AdminWindowUI(object):
         ### Partie haute de la fenêtre###
         self.boutton_parcourir = QtGui.QPushButton()
         self.boutton_parcourir.setText(_translate("AdminWindow", "Parcourir", None))
+        self.boutton_parcourir.clicked.connect(lambda : self.open_file())
         
         self.chemin = QtGui.QLineEdit(self.centralwidget)
         
@@ -99,6 +101,20 @@ class AdminWindowUI(object):
         self.retranslateUi(AdminWindow)
         QtCore.QMetaObject.connectSlotsByName(AdminWindow)
 
+    def open_file(self):
+        """Method to open directory.
+           Use lambda function on browse button to know which entry has to be used"""
+        path = str(self.chemin.text())
+        initpath = os.path.dirname(path)
+        #askedfile = QtGui.QFileDialog.getOpenFileName(self, 'Choisissez un fichier CSV', initpath,("Fichier CSV (*.csv*)"))
+        askedfile = QtGui.QFileDialog.getExistingDirectory(self, u"Choisissez un répertoire de téléchargement",initpath)
+        
+        self.chemin.clear()
+        self.chemin.setText(askedfile)
+
+        if self.chemin.text() == "":
+            self.chemin.setText(path)
+            
     def retranslateUi(self, AdminWindow):
         AdminWindow.setWindowTitle(_translate("AdminWindow", "Administration", None))
         
