@@ -95,7 +95,7 @@ def get_apec_id():
 def getconfigvalue(section, option):
     config = ConfigParser()
     config.read("./config.ini")
-
+    return config.get(section, option)
 
 
 def writeconfigvalue(section, option, value):
