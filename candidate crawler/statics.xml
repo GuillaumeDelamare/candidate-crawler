@@ -3,5 +3,5 @@
     <regions>Toute la France,Alsace,Aquitaine,Auvergne,Basse-Normandie,Bourgogne,Bretagne,Centre,Champagne-Ardenne,Franche-Comte,Haute-Normandie,Ile-de-France,Languedoc-Roussillon,Limousin,Lorraine,Midi-Pyrenees,Nord-Pas-de-Calais,Pays de la Loire,Picardie,Poitou-Charentes,PACA,Rhone-Alpes</regions>
     <salaire>Moins de 35k,De 35 à 49k,De 50 à 69k,De 70 à 89k,Plus de 90k</salaire>
     <disponibilite>Immediate,Moins de 3 mois,Entre 3 et 6 mois,Plus de 6 mois</disponibilite>
-    <fraicheur>CVs du jour,7 derniers jours, 30 derniers jours,Tous les CVs</fraicheur>
+    <fraicheur>CV du jour,7 derniers jours,30 derniers jours,Tous les CV</fraicheur>
     <mobilite>Indifferent,Departement,Region,France entiere,Europe,Monde entier</mobilite></statics>
