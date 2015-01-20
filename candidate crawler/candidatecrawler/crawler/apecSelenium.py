@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from candidatecrawler.core import toolbox
 from selenium import webdriver
 from scrapy.contrib.spiders.init import InitSpider
 from selenium.webdriver.common.keys import Keys
 import time
+import datetime
 import os
 
 
@@ -24,6 +26,7 @@ class apecSelenium(InitSpider):
     """Aretourner"""
     listePageCV = []
     listeLienCV = []
+    ligneCSV = []
     
     
     def __init__(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
@@ -39,6 +42,7 @@ class apecSelenium(InitSpider):
         self.fraicheur = str(fraicheur)
         self.nombreCV = nombreCV
         self.disponibilite = []
+        self.datetime = datetime.datetime.now()
         
         
         if disponibilite.__contains__("Immediate"):
@@ -57,10 +61,13 @@ class apecSelenium(InitSpider):
     
     def parse(self, response):
         """"Lancement du driver"""
+        path = toolbox.getconfigvalue("GENERALPARAMETERS", "dbfile")+os.sep+self.datetime.strftime("%Y-%m-%d-%H-%M-%S")
+        os.mkdir(path)
+        
         profile = webdriver.FirefoxProfile()
         profile.set_preference("browser.download.folderList",2)
         profile.set_preference("browser.download.manager.showWhenStarting",False)
-        profile.set_preference("browser.download.dir", os.getcwd() + 'CV') #TODO définir le dossier de destination
+        profile.set_preference("browser.download.dir", path+os.sep+"CV")
         profile.set_preference("pdfjs.disabled",True)
         profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document")
         driver = webdriver.Firefox(firefox_profile=profile)
@@ -180,19 +187,28 @@ class apecSelenium(InitSpider):
             clicOnglets[compteur].perform()
             driver.switch_to_window(driver.current_window_handle)
             
+            #faire un tableau avec les données
+            #TODO a toi de jouer recupere les donnes sur la page, vois dans le raport final pour l'ordre des champs du csv
+
+            
             #action qui se déroule sur la page du CV (excel, telechargement)
             #telechargement du CV
             telechargeCV = driver.find_element_by_css_selector(".cvDownload>a")
             webdriver.ActionChains(driver).click(telechargeCV).perform()
             time.sleep(2)
             
-            #entre les champs dans le excel
-            #TODO
-            
             #referme l'ongler dans lequel on a travaillé et incrémente
             driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
             driver.switch_to_window(main_window)
             compteur = compteur + 1
             
+        
+            
         """Fin du crawling"""
         driver.close()
+        
+        #créer et remplir le csv avec le tableau de données
+        database = open(path+os.sep+"rapport.csv","w") #crée le fichier csv et l'ouvre
+        #TODO a toi de jouer il faut remplir le csv
+        database.close()
+        
