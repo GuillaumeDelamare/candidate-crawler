@@ -9,7 +9,6 @@ Created on 7 janv. 2015
 ### External modules importation ###
 
 import sys
-import webbrowser
 from PyQt4 import QtCore, QtGui
 
 ### End of external modules importation ###
@@ -20,7 +19,7 @@ from candidatecrawler.view.window import About_window
 from candidatecrawler.view.window import Admin_window
 from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem, QBoxLayout
 from PyQt4.QtCore import QSize, QVariant
-from PyQt4.Qt import Qt, QAbstractItemView
+from PyQt4.Qt import Qt
 
 
 ### End of custom modules importation ###
@@ -123,7 +122,7 @@ class CandidateCrawlerUI(object):
         
         ###Nombre de CVs###
         self.cv_number_label = QtGui.QLabel(self.centralwidget)
-        self.cv_number_label.setText(_translate("AdminWindow", "Nombre de CVs", None))
+        self.cv_number_label.setText(_translate("AdminWindow", "Nombre de CV", None))
         
         self.cv_number_entry = QtGui.QLineEdit(self.centralwidget)
         self.cv_number_entry.setInputMethodHints(QtCore.Qt.ImhNone)
