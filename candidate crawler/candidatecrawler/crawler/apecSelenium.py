@@ -30,7 +30,7 @@ class apecSelenium(InitSpider):
     """Aretourner"""
     listePageCV = []
     listeLienCV = []
-    ligneCSV = ["nom du fichier,reference,nom du candidat,telephone,email,salaire,mobilite,disponibilite,mise a jour"]
+    ligneCSV = [["nom du fichier","reference","nom du candidat","email","salaire","mobilite","disponibilite","mise a jour"]]
     
     
     def __init__(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
@@ -47,7 +47,7 @@ class apecSelenium(InitSpider):
         self.nombreCV = nombreCV
         self.disponibilite = []
         self.datetime = datetime.datetime.now()
-        
+        self.disponibiliteStr=disponibilite
         
         if disponibilite.__contains__("Immediate"):
             self.disponibilite.append(0)
@@ -194,16 +194,23 @@ class apecSelenium(InitSpider):
             #faire un tableau avec les données
             #TODO a toi de jouer recupere les donnes sur la page, vois dans le raport final pour l'ordre des champs du csv
           #  fileName=driver.find_element_by_css_selector('.cvDetails>p>a').text()
-            ref=driver.find_element_by_css_selector('.cvDetails>p')
-            candidateName=driver.find_element_by_css_selector('.cvEtatCivil>p>strong')
-#             tel=
-#             email=
-#             salaire=
-#             mobi=
-#             dispo=
-#             update=
-#             
-            self.ligneCSV.append("3,4,5")  
+            
+            rightBox=driver.find_elements_by_css_selector('.cvDetails>p')#boite de droite sur le site de l'APEC
+            leftBox=driver.find_elements_by_css_selector('.cvEtatCivil>p')
+            
+            "nom du fichier","reference","nom du candidat","telephone","email","salaire","mobilite","disponibilite","mise a jour"
+            
+            ref=(rightBox[0].text[18:]+" ").encode('utf-8')
+            candidateName=driver.find_element_by_css_selector('.cvEtatCivil>p>strong').text.encode('utf-8')
+            fileName=rightBox[2].text[11:].encode('utf-8')
+            email=leftBox[len(leftBox)-1].text[9:].encode('utf-8')
+            salaire=self.salaire
+            mobi=self.mobilite
+            dispo=self.disponibiliteStr
+            update=rightBox[1].text[31:].encode('utf-8')
+             
+            #Remplissage csv
+            self.ligneCSV.append([fileName,ref,candidateName,email,salaire,mobi,dispo,update])  
             
                 
             #action qui se déroule sur la page du CV (excel, telechargement)
@@ -223,9 +230,10 @@ class apecSelenium(InitSpider):
         driver.close()
         
         #créer et remplir le csv avec le tableau de données
-        database = open(path+os.sep+"rapport.csv","w") #crée le fichier csv et l'ouvre
+        with open(path+os.sep+"rapport.csv","w") as database: #crée le fichier csv et l'ouvre
         #TODO a toi de jouer il faut remplir le csv
-        for s in self.ligneCSV: 
-            database.writelines(s)
-        database.close()
+            writer=csv.writer(database,dialect='excel')
+            writer.writerows(self.ligneCSV)
+            
+        
         

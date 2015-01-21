@@ -62,15 +62,7 @@ class CandidateCrawlerCore(object):
         crawler.start()
         log.start()
         reactor.run() #@UndefinedVariable
-#     
-#     #TODO: Telechargement des CVs
-#     
-#     
-#     #TODO: Creation de l'excel
-# 
-# 
-#     #TODO: Zippage
-
+        reactor.stop() #@UndefinedVariable
 
 
     
