@@ -75,7 +75,7 @@ class apecSelenium:
         profile.set_preference("browser.download.manager.showWhenStarting",False)
         profile.set_preference("browser.download.dir", path+os.sep+"CV")
         profile.set_preference("pdfjs.disabled",True)
-        profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/rtf")
         driver = webdriver.Firefox(firefox_profile=profile)
         #driver.set_window_position(-2000, -3000)
         driver.get(self.baseurl)
@@ -181,7 +181,7 @@ class apecSelenium:
         
 
         while compteur in xrange(0,int(self.nombreCV)) and compteur < len(boutonCVs): #va
-             #permet d'ouvrir les onglets et d'aller sur les pages des CVs
+            #permet d'ouvrir les onglets et d'aller sur les pages des CVs
             main_window = driver.current_window_handle
             clicOnglets.append(webdriver.ActionChains(driver))
             clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
@@ -190,11 +190,8 @@ class apecSelenium:
             clicOnglets[compteur].perform()
             driver.switch_to_window(driver.current_window_handle)
                 
-            #faire un tableau avec les données
-            #TODO a toi de jouer recupere les donnes sur la page, vois dans le raport final pour l'ordre des champs du csv
-          #  fileName=driver.find_element_by_css_selector('.cvDetails>p>a').text()
-            
-            rightBox=driver.find_elements_by_css_selector('.cvDetails>p')#boite de droite sur le site de l'APEC
+            #faire un tableau avec les données         
+            rightBox=driver.find_elements_by_css_selector('.cvDetails>p') #boite de droite sur le site de l'APEC
             leftBox=driver.find_elements_by_css_selector('.cvEtatCivil>p')
             
             "nom du fichier","reference","nom du candidat","telephone","email","salaire","mobilite","disponibilite","mise a jour"
@@ -231,7 +228,7 @@ class apecSelenium:
         #créer et remplir le csv avec le tableau de données
         with open(path+os.sep+"rapport.csv","w") as database: #crée le fichier csv et l'ouvre
         #TODO a toi de jouer il faut remplir le csv
-            writer=csv.writer(database,dialect='excel')
+            writer=csv.writer(database)
             writer.writerows(self.ligneCSV)
 #         reactor.stop() #@UndefinedVariable
         

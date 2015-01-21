@@ -267,7 +267,7 @@ class CandidateCrawlerUI(object):
     
     def ouvrirDialogue(self):
         #TODO trUtf8 is deprecated
-        QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés en les séparant par des espaces."))
+        QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés, sans accents, en les séparant par des espaces."))
 
     
     def _entries_retriever(self):
