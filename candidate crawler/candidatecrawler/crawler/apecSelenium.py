@@ -2,37 +2,18 @@
 
 from candidatecrawler.core import toolbox
 from selenium import webdriver
-from scrapy.contrib.spiders.init import InitSpider
 from selenium.webdriver.common.keys import Keys
 import time
 import datetime
 import os
 import csv
 from email import email
-from lxml import html
-from twisted.internet import reactor
-
 
 
 
 class apecSelenium:
     """config du spider"""
-    name = "product_spider"
-    allowed_domains = ["recruteurs.apec.fr"]
-    start_urls = ["http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"]
-    baseurl = "http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"
-   
-    """Instance propre au site de l'APEC"""
-    regions=["Toute la France","Alsace","Aquitaine","Auvergne","Basse-Normandie","Bourgogne","Bretagne","Centre","Champagne","Corse",
-             "France Outre-Mer", "Franche-Comté","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
-             "Limousin","Lorraine","Midi-Pyrénées","Nord-Pas-de-Calais",
-             "PACA","Pays de La Loire","Picardie","Poitou-Charentes","Rhône-Alpes"]
-    disponibilites = ['0','1','2','3']
     
-    """Aretourner"""
-    listePageCV = []
-    listeLienCV = []
-    ligneCSV = [["nom du fichier","reference","nom du candidat","email","salaire","mobilite","disponibilite","mise a jour"]]
     
     
     def __init__(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
@@ -63,7 +44,23 @@ class apecSelenium:
         if disponibilite.__contains__( "Plus de 6 mois"):
             self.disponibilite.append(3) 
         
+        self.name = "product_spider"
+        self.allowed_domains = ["recruteurs.apec.fr"]
+        self.start_urls = ["http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"]
+        self.baseurl = "http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"
+   
+        """Instance propre au site de l'APEC"""
+        self.regions=["Toute la France","Alsace","Aquitaine","Auvergne","Basse-Normandie","Bourgogne","Bretagne","Centre","Champagne","Corse",
+                 "France Outre-Mer", "Franche-Comté","Haute-Normandie","Ile-de-France","Languedoc-Roussillon",
+                 "Limousin","Lorraine","Midi-Pyrénées","Nord-Pas-de-Calais",
+                 "PACA","Pays de La Loire","Picardie","Poitou-Charentes","Rhône-Alpes"]
+        self.disponibilites = ['0','1','2','3']
         
+        """Aretourner"""
+        self.listePageCV = []
+        self.listeLienCV = []
+        self.ligneCSV = [["nom du fichier","reference","nom du candidat","email","salaire","mobilite","disponibilite","mise a jour"]]
+            
     
     def parse(self):
         """"Lancement du driver"""
@@ -181,45 +178,60 @@ class apecSelenium:
         
 
         while compteur in xrange(0,int(self.nombreCV)) and compteur < len(boutonCVs): #va
-            #permet d'ouvrir les onglets et d'aller sur les pages des CVs
-            main_window = driver.current_window_handle
-            clicOnglets.append(webdriver.ActionChains(driver))
-            clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
-            clicOnglets[compteur].click(boutonCVs[compteur])
-            clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
-            clicOnglets[compteur].perform()
-            driver.switch_to_window(driver.current_window_handle)
+            try:
+                    
+                #permet d'ouvrir les onglets et d'aller sur les pages des CVs
+                main_window = driver.current_window_handle
+                clicOnglets.append(webdriver.ActionChains(driver))
+                clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
+                clicOnglets[compteur].click(boutonCVs[compteur])
+                clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
+                clicOnglets[compteur].perform()
+                driver.switch_to_window(driver.current_window_handle)
+                    
+                #fait un tableau avec les données         
+                rightBox=driver.find_elements_by_css_selector('.cvDetails>p') #boite de droite sur le site de l'APEC
+                leftBox=driver.find_elements_by_css_selector('.cvEtatCivil>p') #boite de gauche
                 
-            #faire un tableau avec les données         
-            rightBox=driver.find_elements_by_css_selector('.cvDetails>p') #boite de droite sur le site de l'APEC
-            leftBox=driver.find_elements_by_css_selector('.cvEtatCivil>p')
-            
-            "nom du fichier","reference","nom du candidat","telephone","email","salaire","mobilite","disponibilite","mise a jour"
-            
-            ref=(rightBox[0].text[18:]+" ").encode('utf-8')
-            candidateName=driver.find_element_by_css_selector('.cvEtatCivil>p>strong').text.encode('utf-8')
-            fileName=rightBox[2].text[11:].encode('utf-8')
-            email=leftBox[len(leftBox)-1].text[9:].encode('utf-8')
-            salaire=self.salaire
-            mobi=self.mobilite
-            dispo=self.disponibiliteStr
-            update=rightBox[1].text[31:].encode('utf-8')
-             
-            #Remplissage csv
-            self.ligneCSV.append([fileName,ref,candidateName,email,salaire,mobi,dispo,update])  
-            
+                "nom du fichier","reference","nom du candidat","telephone","email","salaire","mobilite","disponibilite","mise a jour"
                 
-            #action qui se déroule sur la page du CV (excel, telechargement)
-            #telechargement du CV
-            telechargeCV = driver.find_element_by_css_selector(".cvDownload>a")
-            webdriver.ActionChains(driver).click(telechargeCV).perform()
-            time.sleep(2)
-               
-            #referme l'ongler dans lequel on a travaillé et incrémente
-            driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
-            driver.switch_to_window(main_window)
-            compteur = compteur + 1
+                ref=(rightBox[0].text[18:]+" ").encode('utf-8')
+                try:
+                    candidateName=driver.find_element_by_css_selector('.cvEtatCivil>p>strong').text.encode('utf-8')
+                except IndexError:
+                    candidateName="Anonyme"
+                try:
+                    fileName=rightBox[2].text[11:].encode('utf-8')
+                except IndexError:
+                    fileName="error"
+                try:
+                    email=leftBox[len(leftBox)-1].text[9:].encode('utf-8')
+                except IndexError:
+                    email="Anonyme"
+                salaire=self.salaire
+                mobi=self.mobilite
+                dispo=self.disponibiliteStr
+                try:
+                    update=rightBox[1].text[31:].encode('utf-8')
+                except IndexError:
+                    update="Date inconnue"
+                #Remplissage csv
+                self.ligneCSV.append([fileName,ref,candidateName,email,salaire,mobi,dispo,update])  
                 
+                    
+                #action qui se déroule sur la page du CV (excel, telechargement)
+                #telechargement du CV
+                telechargeCV = driver.find_element_by_css_selector(".cvDownload>a")
+                webdriver.ActionChains(driver).click(telechargeCV).perform()
+                time.sleep(2)
+                   
+                #referme l'ongler dans lequel on a travaillé et incrémente
+                driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
+                driver.switch_to_window(main_window)
+                compteur = compteur + 1
+            except _:
+                print("erreur serveur(probablement interne), relancez la recherche")
+            
             
             
         """Fin du crawling"""
@@ -227,9 +239,9 @@ class apecSelenium:
         
         #créer et remplir le csv avec le tableau de données
         with open(path+os.sep+"rapport.csv","w") as database: #crée le fichier csv et l'ouvre
-        #TODO a toi de jouer il faut remplir le csv
+       
             writer=csv.writer(database)
             writer.writerows(self.ligneCSV)
-#         reactor.stop() #@UndefinedVariable
+
         
         
