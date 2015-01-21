@@ -8,11 +8,11 @@ Created on 8 janv. 2015
 
 ### External modules importation ###
 
-import sys
+import sys, os
 from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QSizePolicy, QBoxLayout, QGroupBox, QGridLayout
+from PyQt4.QtGui import QSizePolicy, QBoxLayout, QGroupBox
 from candidatecrawler.core import toolbox
-import os
+
 
 ### End of external modules importation ###
 try:

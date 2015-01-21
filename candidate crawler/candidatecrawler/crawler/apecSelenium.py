@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import time, datetime, os, csv
 from candidatecrawler.core import toolbox
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time
-import datetime
-import os
-import csv
 from email import email
 
 
 
 
 class apecSelenium:
-    """config du spider"""
-    
-    
     
     def __init__(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
         """Initialisation du spider"""
@@ -45,9 +39,6 @@ class apecSelenium:
         if disponibilite.__contains__( "Plus de 6 mois"):
             self.disponibilite.append(3) 
         
-        self.name = "product_spider"
-        self.allowed_domains = ["recruteurs.apec.fr"]
-        self.start_urls = ["http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"]
         self.baseurl = "http://recruteurs.apec.fr/Accueil/ApecIndexAccueil.jsp?PEGA_HREF_950420318_0_0_doLogin=doLogin"
    
         """Instance propre au site de l'APEC"""
@@ -75,7 +66,7 @@ class apecSelenium:
         profile.set_preference("pdfjs.disabled",True)
         profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/rtf")
         driver = webdriver.Firefox(firefox_profile=profile)
-        #driver.set_window_position(-2000, -3000)
+        driver.set_window_position(-2000, -3000)
         driver.get(self.baseurl)
         
         """Login"""
@@ -172,15 +163,12 @@ class apecSelenium:
         
         
         """Sauvergarde les CVs et crée le Excel"""
-        boutonCVs = driver.find_elements_by_css_selector('.titreCV>dl>dt>a')
-        
+        boutonCVs = driver.find_elements_by_css_selector('.titreCV>dl>dt>a') 
         clicOnglets = []
         compteur = 0
-        
 
-        while compteur in xrange(0,int(self.nombreCV)) and compteur < len(boutonCVs): #va
-            try:
-                    
+        while compteur in xrange(0,int(self.nombreCV)) and compteur < len(boutonCVs):
+            try:   
                 #permet d'ouvrir les onglets et d'aller sur les pages des CVs
                 main_window = driver.current_window_handle
                 clicOnglets.append(webdriver.ActionChains(driver))
@@ -233,11 +221,11 @@ class apecSelenium:
                 driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
                 driver.switch_to_window(main_window)
                 compteur = compteur + 1
+            
             except _:
                 print("erreur serveur(probablement interne), relancez la recherche")
             
-            
-            
+                
         """Fin du crawling"""
         driver.close()
         
@@ -245,6 +233,3 @@ class apecSelenium:
         with open(path+os.sep+"rapport.csv","w") as database: #crée le fichier csv et l'ouvre
             writer = csv.writer(database, dialect = csv.excel, delimiter = ';', lineterminator = '\n') 
             writer.writerows(self.ligneCSV)
-
-        
-        
