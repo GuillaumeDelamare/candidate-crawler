@@ -333,7 +333,7 @@ class CandidateCrawlerUI(object):
             print(self.keywords)
             print(self.region)
             print(self.mobilite)
-            #print(self.salaire)
+            print(self.salaire)
             print(self.disponibilite)
             print(self.fraicheur)
             print(self.nombreCV)
