@@ -20,7 +20,7 @@ from candidatecrawler.view.window import Admin_window
 from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem, QBoxLayout
 from PyQt4.QtCore import QSize, QVariant
 from PyQt4.Qt import Qt
-from twisted.internet import reactor
+
 
 
 ### End of custom modules importation ###
@@ -266,7 +266,6 @@ class CandidateCrawlerUI(object):
         self.close()
     
     def ouvrirDialogue(self):
-        #TODO trUtf8 is deprecated
         QMessageBox.information(self, self.trUtf8("Aide mots-clés"),self.trUtf8("Vous pouvez entrer plusieurs mots-clés, sans accents, en les séparant par des espaces."))
 
     
@@ -313,7 +312,6 @@ class CandidateCrawlerUI(object):
         """Method to run program on tab1: ponctual search"""
         self.progression_text.append("Lancement du programme")
         self.progression_text.append("Programme en cours ...")
-        #self._change_open_button_status(False)
 
         app.processEvents() # Window refresh
 
@@ -344,19 +342,7 @@ class CandidateCrawlerUI(object):
             
             runapp.crawl()
             
-
-#             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
-#                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
-#                                                 domain=self.domain, keywords=self.keywords, region=self.region,\
-#                                                 daterange=self.daterange, cv_number=self.ml, db_management = "True")
-# 
-#             if len(self.new_links) > 50:
-#                 self.progression_text.append("Trop d'annonces trouvées. Veuillez affiner vos critères")
-#                 self.progression_text.append("Fin du programme\n")
-#             else:
-#                 self.progression_text.append("{0} nouvelles annonces trouvées".format(len(self.new_links)))
-#                 self.progression_text.append("Fin du programme\n")
-#                 self._change_open_button_status(True)
+            
         except:
             self.progression_text.append(self.trUtf8("Oups, quelque chose s'est mal passé"))
             self.progression_text.append(self.trUtf8("Veuillez vérifier les champs de l'adiministration"))

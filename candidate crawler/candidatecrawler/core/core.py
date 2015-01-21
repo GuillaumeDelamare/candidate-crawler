@@ -16,7 +16,7 @@ from candidatecrawler.crawler.apecSelenium import apecSelenium
 
 ### Classes ###
 class CandidateCrawlerCore(object):
-    #TODO: Listeners
+    
     keyword = ""
     region = []
     mobilite = ""
@@ -42,27 +42,12 @@ class CandidateCrawlerCore(object):
     
     
     
-#     #TODO: Appel crawler
+
     def crawl(self):
         
-#         print(login)
-#         print(password)
-#         print(keyword)
-#         print(region)
-#         print(mobilite)
-#         print(salaire)
-#         print(disponibilite)
-#         print(fraicheur)
-#         print(nombreCV)
-        
+
         spider = apecSelenium(self.login,self.password,self.keyword,self.region,self.mobilite,self.salaire,self.disponibilite,self.fraicheur,self.nombreCV)
         spider.parse()
-#         crawler = Crawler(Settings())
-#         crawler.configure()
-#         crawler.crawl(spider)
-#         crawler.start()
-#         log.start()
-#         reactor.run() #@UndefinedVariable
-        
+
 
     
