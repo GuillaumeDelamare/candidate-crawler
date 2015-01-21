@@ -11,6 +11,7 @@ from email import email
 
 
 
+
 class apecSelenium:
     """config du spider"""
     
@@ -30,7 +31,7 @@ class apecSelenium:
         self.nombreCV = nombreCV
         self.disponibilite = []
         self.datetime = datetime.datetime.now()
-        self.disponibiliteStr=disponibilite
+        self.disponibiliteStr=" ".join(disponibilite)
         
         if disponibilite.__contains__("Immediate"):
             self.disponibilite.append(0)
@@ -201,7 +202,10 @@ class apecSelenium:
                 except IndexError:
                     candidateName="Anonyme"
                 try:
-                    fileName=rightBox[2].text[11:].encode('utf-8')
+                    if rightBox[2].text[len(rightBox[2].text)-8]==" ":
+                        fileName="file:///"+path+os.sep+"CV"+os.sep+rightBox[2].text[11:len(rightBox[2].text)-8].encode('utf-8')
+                    else:
+                        fileName="file:///"+path+os.sep+"CV"+os.sep+rightBox[2].text[11:len(rightBox[2].text)-9].encode('utf-8')                    
                 except IndexError:
                     fileName="error"
                 try:
@@ -239,8 +243,7 @@ class apecSelenium:
         
         #créer et remplir le csv avec le tableau de données
         with open(path+os.sep+"rapport.csv","w") as database: #crée le fichier csv et l'ouvre
-       
-            writer=csv.writer(database)
+            writer = csv.writer(database, dialect = csv.excel, delimiter = ';', lineterminator = '\n') 
             writer.writerows(self.ligneCSV)
 
         
