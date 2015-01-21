@@ -20,6 +20,7 @@ from candidatecrawler.view.window import Admin_window
 from PyQt4.QtGui import QIcon, QMessageBox, QStandardItemModel, QStandardItem, QBoxLayout
 from PyQt4.QtCore import QSize, QVariant
 from PyQt4.Qt import Qt
+from twisted.internet import reactor
 
 
 ### End of custom modules importation ###
@@ -342,6 +343,8 @@ class CandidateCrawlerUI(object):
             
             
             runapp.crawl()
+            
+
 #             self.new_links = runapp.run_program(profile_name="Recherche ponctuelle", acc=self.ac, aefc=self.aefc, apecc=self.apecc,\
 #                                                 caoec=self.caoec, ic=self.idc, mc=self.mc, poc=self.poc, rjc=self.rjc,\
 #                                                 domain=self.domain, keywords=self.keywords, region=self.region,\

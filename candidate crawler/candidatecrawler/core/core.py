@@ -56,13 +56,13 @@ class CandidateCrawlerCore(object):
 #         print(nombreCV)
         
         spider = apecSelenium(self.login,self.password,self.keyword,self.region,self.mobilite,self.salaire,self.disponibilite,self.fraicheur,self.nombreCV)
-        crawler = Crawler(Settings())
-        crawler.configure()
-        crawler.crawl(spider)
-        crawler.start()
-        log.start()
-        reactor.run() #@UndefinedVariable
-        reactor.stop() #@UndefinedVariable
-
+        spider.parse()
+#         crawler = Crawler(Settings())
+#         crawler.configure()
+#         crawler.crawl(spider)
+#         crawler.start()
+#         log.start()
+#         reactor.run() #@UndefinedVariable
+        
 
     
