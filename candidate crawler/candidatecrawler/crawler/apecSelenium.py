@@ -10,10 +10,12 @@ import os
 import csv
 from email import email
 from lxml import html
+from twisted.internet import reactor
 
 
 
-class apecSelenium(InitSpider):
+
+class apecSelenium:
     """config du spider"""
     name = "product_spider"
     allowed_domains = ["recruteurs.apec.fr"]
@@ -63,7 +65,7 @@ class apecSelenium(InitSpider):
         
         
     
-    def parse(self, response):
+    def parse(self):
         """"Lancement du driver"""
         path = toolbox.getconfigvalue("GENERALPARAMETERS", "dbfile")+os.sep+self.datetime.strftime("%Y-%m-%d-%H-%M-%S")
         os.mkdir(path)
@@ -75,7 +77,7 @@ class apecSelenium(InitSpider):
         profile.set_preference("pdfjs.disabled",True)
         profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document")
         driver = webdriver.Firefox(firefox_profile=profile)
-        driver.set_window_position(-2000, -3000)
+        #driver.set_window_position(-2000, -3000)
         driver.get(self.baseurl)
         
         """Login"""
@@ -142,8 +144,7 @@ class apecSelenium(InitSpider):
             
         """Disponibilite"""
         disponibilitesite=driver.find_elements_by_css_selector('.normal>input')
-        print('bouboubbb')
-        print(disponibilitesite)
+        
         for k in range(24,24+len(self.disponibilites)):
                 if self.disponibilite.__contains__(self.disponibilites[k-24]) :
                     webdriver.ActionChains(driver).move_to_element(disponibilitesite[k-1]).click().perform()
@@ -153,8 +154,6 @@ class apecSelenium(InitSpider):
         
         """Fraicheur"""
         fraicheursite=driver.find_elements_by_css_selector('.contentInside>select>option')
-        self.log("dlqghljghljsw")
-        self.log(fraicheursite)
         if self.fraicheur == 0:
             webdriver.ActionChains(driver).move_to_element(fraicheursite[0]).click().perform()
         if self.fraicheur == 1:
@@ -234,6 +233,6 @@ class apecSelenium(InitSpider):
         #TODO a toi de jouer il faut remplir le csv
             writer=csv.writer(database,dialect='excel')
             writer.writerows(self.ligneCSV)
-            
+#         reactor.stop() #@UndefinedVariable
         
         
