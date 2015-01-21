@@ -7,6 +7,10 @@ from selenium.webdriver.common.keys import Keys
 import time
 import datetime
 import os
+import csv
+from email import email
+from lxml import html
+
 
 
 class apecSelenium(InitSpider):
@@ -26,7 +30,7 @@ class apecSelenium(InitSpider):
     """Aretourner"""
     listePageCV = []
     listeLienCV = []
-    ligneCSV = []
+    ligneCSV = ["nom du fichier,reference,nom du candidat,telephone,email,salaire,mobilite,disponibilite,mise a jour"]
     
     
     def __init__(self,login,password,keyword,region,mobilite,salaire,disponibilite,fraicheur,nombreCV):
@@ -176,9 +180,9 @@ class apecSelenium(InitSpider):
         clicOnglets = []
         compteur = 0
         
-        
+
         while compteur in xrange(0,int(self.nombreCV)) and compteur < len(boutonCVs): #va
-            #permet d'ouvrir les onglets et d'aller sur les pages des CVs
+             #permet d'ouvrir les onglets et d'aller sur les pages des CVs
             main_window = driver.current_window_handle
             clicOnglets.append(webdriver.ActionChains(driver))
             clicOnglets[compteur].key_down(Keys.LEFT_CONTROL+ Keys.SHIFT)
@@ -186,23 +190,34 @@ class apecSelenium(InitSpider):
             clicOnglets[compteur].key_up(Keys.LEFT_CONTROL+ Keys.SHIFT)
             clicOnglets[compteur].perform()
             driver.switch_to_window(driver.current_window_handle)
-            
+                
             #faire un tableau avec les données
             #TODO a toi de jouer recupere les donnes sur la page, vois dans le raport final pour l'ordre des champs du csv
-
+          #  fileName=driver.find_element_by_css_selector('.cvDetails>p>a').text()
+            ref=driver.find_element_by_css_selector('.cvDetails>p')
+            candidateName=driver.find_element_by_css_selector('.cvEtatCivil>p>strong')
+#             tel=
+#             email=
+#             salaire=
+#             mobi=
+#             dispo=
+#             update=
+#             
+            self.ligneCSV.append("3,4,5")  
             
+                
             #action qui se déroule sur la page du CV (excel, telechargement)
             #telechargement du CV
             telechargeCV = driver.find_element_by_css_selector(".cvDownload>a")
             webdriver.ActionChains(driver).click(telechargeCV).perform()
             time.sleep(2)
-            
+               
             #referme l'ongler dans lequel on a travaillé et incrémente
             driver.find_element_by_tag_name('body').send_keys(Keys.CONTROL + 'w')
             driver.switch_to_window(main_window)
             compteur = compteur + 1
+                
             
-        
             
         """Fin du crawling"""
         driver.close()
@@ -210,5 +225,7 @@ class apecSelenium(InitSpider):
         #créer et remplir le csv avec le tableau de données
         database = open(path+os.sep+"rapport.csv","w") #crée le fichier csv et l'ouvre
         #TODO a toi de jouer il faut remplir le csv
+        for s in self.ligneCSV: 
+            database.writelines(s)
         database.close()
         
