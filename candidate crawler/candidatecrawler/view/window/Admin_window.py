@@ -106,7 +106,6 @@ class AdminWindowUI(object):
            Use lambda function on browse button to know which entry has to be used"""
         path = str(self.chemin.text())
         initpath = os.path.dirname(path)
-        #askedfile = QtGui.QFileDialog.getOpenFileName(self, 'Choisissez un fichier CSV', initpath,("Fichier CSV (*.csv*)"))
         askedfile = QtGui.QFileDialog.getExistingDirectory(self, u"Choisissez un répertoire de téléchargement",initpath)
         
         self.chemin.clear()

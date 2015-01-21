@@ -175,13 +175,10 @@ class CandidateCrawlerUI(object):
         self.about_action = QtGui.QAction(MainWindow)
         self.admin_action = QtGui.QAction(MainWindow)
         self.exit_action = QtGui.QAction(MainWindow)
-        self.reset_action = QtGui.QAction(MainWindow)
         self.menuFichier.addAction(self.admin_action)
         self.menuFichier.addAction(self.exit_action)
-        self.menuEdition.addAction(self.reset_action)
         self.menuAide.addAction(self.about_action)
         self.menubar.addAction(self.menuFichier.menuAction())
-        self.menubar.addAction(self.menuEdition.menuAction())
         self.menubar.addAction(self.menuAide.menuAction())
         
      
@@ -231,7 +228,6 @@ class CandidateCrawlerUI(object):
         self.about_action.triggered.connect(self.about_window) 
         self.admin_action.triggered.connect(self.admin_window)  
         self.exit_action.triggered.connect(self.close)
-        self.reset_action.triggered.connect(self.reset)
         self.run_button.clicked.connect(self.run_program)
         self.keywords_help.clicked.connect(self.ouvrirDialogue)
         
@@ -242,13 +238,11 @@ class CandidateCrawlerUI(object):
         
         
         self.menuFichier.setTitle(_translate("MainWindow", "Fichier", None))
-        self.menuEdition.setTitle(_translate("MainWindow", "Edition", None))
         self.menuAide.setTitle(_translate("MainWindow", "Aide", None))
         self.about_action.setText(_translate("MainWindow", "A propos", None))
         self.admin_action.setText(_translate("MainWindow", "Administration", None))
         self.exit_action.setText(_translate("MainWindow", "Quitter", None))
-        self.reset_action.setText(_translate("MainWindow", "Initialiser", None))
-
+        
 
     # Methods for class CandidateCrawlerUI
 
