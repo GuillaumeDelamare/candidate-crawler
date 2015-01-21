@@ -17,19 +17,16 @@ from ConfigParser import ConfigParser
 def current_date():
     """Get current date, and format it"""
     currentdate = datetime.date.today().strftime("%d-%m-%Y") # We get current date and format it DD-MM-YYYY
-
     return currentdate
 
 def compute_duration(day,month,year):
     """Compute duration between 2 dates"""
     duration = datetime.datetime.now() - datetime.datetime(year,month,day)
-
     return duration.days
 
 def ping_website(url):
     """Ping a website"""
     website_status = True
-
     try:
         conn = httplib.HTTPConnection(url)
         conn.request("GET",url)
@@ -45,7 +42,7 @@ def xml_reader(input_file, entry):
     tree = ElementTree.ElementTree()
     tree.parse(xmlfile)
     root = tree.getroot()
-
+    
     askedfield = root.find(entry).text
 
     xmlfile.close()
