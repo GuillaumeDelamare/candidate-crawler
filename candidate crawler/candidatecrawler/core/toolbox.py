@@ -4,7 +4,6 @@ Created on 7 janv. 2015
 @author: Jonathan
 '''
 ### External modules importation ###
-
 import os
 import datetime
 import httplib
@@ -105,5 +104,5 @@ def writeconfigvalue(section, option, value):
     config.set(section, option, u''.join(unicode(value)).encode('utf-8'))
     with open("./config.ini", 'wb') as configfile:
         config.write(configfile)
-    
+        
 ### End of functions ###

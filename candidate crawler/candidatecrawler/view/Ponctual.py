@@ -336,12 +336,9 @@ class CandidateCrawlerUI(object):
             print(self.disponibilite)
             print(self.fraicheur)
             print(self.nombreCV)
-            
-            
-            
-            
+
             runapp.crawl()
-            
+            self.progression_text.append(self.trUtf8("Fin du programme\n"))
             
         except:
             self.progression_text.append(self.trUtf8("Oups, quelque chose s'est mal passé"))
