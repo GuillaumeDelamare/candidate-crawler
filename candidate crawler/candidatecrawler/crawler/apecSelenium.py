@@ -64,7 +64,7 @@ class apecSelenium:
         profile.set_preference("browser.download.manager.showWhenStarting",False)
         profile.set_preference("browser.download.dir", path+os.sep+"CV")
         profile.set_preference("pdfjs.disabled",True)
-        profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/rtf")
+        profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, text/plain, application/vnd.idx, application/xml, application/octet-stream, text/html, application/vnd.oasis.opendocument.text-web, application/rtf, text/richtext, application/xhtml+xml")
         driver = webdriver.Firefox(firefox_profile=profile)
         driver.set_window_position(-2000, -3000)
         driver.get(self.baseurl)
@@ -224,7 +224,7 @@ class apecSelenium:
             
             except:
                 print("erreur serveur(probablement interne), relancez la recherche")
-            
+                return
                 
         """Fin du crawling"""
         driver.close()
