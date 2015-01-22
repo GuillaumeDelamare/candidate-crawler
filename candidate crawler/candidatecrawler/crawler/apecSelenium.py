@@ -222,7 +222,7 @@ class apecSelenium:
                 driver.switch_to_window(main_window)
                 compteur = compteur + 1
             
-            except _:
+            except:
                 print("erreur serveur(probablement interne), relancez la recherche")
             
                 
