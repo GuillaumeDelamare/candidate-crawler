@@ -224,7 +224,7 @@ class apecSelenium:
             
             except:
                 print("erreur serveur(probablement interne), relancez la recherche")
-                return
+                compteur=len(boutonCVs)
                 
         """Fin du crawling"""
         driver.close()
