@@ -6,12 +6,14 @@
 # Crawl Indeed to find interesting jobs #
 #########################################
 
-import re, bs4
-from jobcrawler.core import toolbox
+import bs4
+from jobcrawler.core import toolbox, dbmanagement
+from jobcrawler.crawler.defaultcrawler import defaultCrawler
+from datetime import datetime, timedelta
 
-class IndeedCrawler(object):
-    def __init__(self):
-        self.webdomain = "www.indeed.fr"
+class IndeedCrawler(defaultCrawler):
+    def __init__(self, database):
+        defaultCrawler.__init__(self, database, "www.indeed.fr")
         self.regions = {"Toute la France": "France",
                         "Alsace":"Alsace",
                         "Aquitaine": "Aquitaine",
@@ -35,34 +37,46 @@ class IndeedCrawler(object):
                         "PACA": "Provence-Alpes-C%C3%B4te+d%27Azur",
                         "Rhône-Alpes": "Rh%C3%B4ne-Alpes"}
 
-    def _indeed_crawler(self, keywords, daterange, region):
-        """Crawler for Indeed"""
-        site_list = []
-
-        if not toolbox.ping_website(self.webdomain):
-            print("{0} not responding".format(self.webdomain))
-            return
-
+    def run(self ,keywords, daterange, region):
         region_code = self.regions[region]
 
         for keyword in keywords:
             uri = "/emplois?as_and={0}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&sr=directhire&radius=0&l={1}&fromage={2}&limit=50&sort=date&psf=advsrch".format(keyword, region_code, daterange)
             soup = bs4.BeautifulSoup(toolbox.html_reader(self.webdomain,uri))
-            for link in soup.find_all(href=re.compile("/rc/")):
-                link = link.get("href")
-                site_list.append("http://{0}{1}".format(self.webdomain,link))
-
-        site_list = list(set(site_list))
-
-        return site_list
-
-    def run_program(self ,keywords, daterange, region):
-        """Method to run program"""
-        indeed_result = self._indeed_crawler(keywords, daterange, region)
-
-        return indeed_result
-
+            
+            for annonce in soup.find_all('div', {'class': 'row  result'}):
+                link = "http://{0}{1}".format(self.webdomain, annonce.find('a').get('href'))
+                
+                try:
+                    temp = annonce.find('span', {'class': 'company'})
+                    temp = temp.find('span')
+                    firm = temp.contents[0].encode("utf-8")
+                except:
+                    firm = "Inconnu"
+                
+                try:
+                    temp = annonce.find('span', {'class', 'date'})
+                    releasedate = temp.contents[0].encode("utf-8")
+                    
+                    if "heure" in releasedate:
+                        releasedate = datetime.now()
+                    elif "jour" in releasedate:
+                        releasedate = datetime.now() - timedelta(int(releasedate.split()[3]))
+                    else:
+                        releasedate = None
+                except:
+                    releasedate = None
+                    
+                self.database.ads.append(dbmanagement.ad(link=link, 
+                                                         founddate=datetime.now(),
+                                                         releasedate=releasedate,
+                                                         searchkeywords=[keyword],
+                                                         firm=firm))
 
 if __name__=='__main__':
-    runapp = IndeedCrawler()
-    print(runapp.run_program(["Java"], 3, "Pays de la Loire"))
+    db = dbmanagement.database("./db.csv")
+    runapp = IndeedCrawler(db)
+    runapp.run(["Java","Python","Ingenieur"], 3, "Pays de la Loire")
+    
+    db.merge()
+    db.write()
