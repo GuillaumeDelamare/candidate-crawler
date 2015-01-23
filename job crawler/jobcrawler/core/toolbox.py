@@ -68,3 +68,6 @@ def writeconfigvalue(section, option, value):
     with open("./config.ini", 'wb') as configfile:
         config.write(configfile)
     
+class HTTPError(Exception):
+    def __init__(self, message):
+        Exception.__init__(self, message)
