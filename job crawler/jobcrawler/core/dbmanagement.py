@@ -16,17 +16,19 @@ class dbheader:
     RELEASEDATE = "DATE DE PUBLICATION"
     SEARCHKEYWORDS = "MOTS CLE DE RECHERCHE"
     FILTERKEYWORDS = "MOTS CLE DE FILTRAGE"
+    TITLE = "TITRE"
 
 
 
 class ad(object):
-    def __init__(self, link, founddate=None, releasedate=None, searchkeywords=[], filterkeywords=[], firm=None):
+    def __init__(self, link, founddate=None, releasedate=None, searchkeywords=[], filterkeywords=[], firm=None, title=None):
         self.link = link
         self.founddate = founddate
         self.releasedate = releasedate
         self.searchkeywords = searchkeywords
         self.filterkeywords = filterkeywords
         self.firm = firm
+        self.title = title
     
     def __str__(self, *args, **kwargs):
         s = "[{}, {}, {}, {}, {}, {}]"
@@ -80,7 +82,7 @@ class database(object):
     
     def read(self):
         with open(self.path, 'rb') as f:
-            reader = csv.DictReader(f, dialect='excel', delimiter=',')
+            reader = csv.DictReader(f, dialect='excel', delimiter=';')
             for row in reader:
                 try:
                     foundate = datetime.strptime(row[dbheader.FOUNDDATE], self.datefmt)
@@ -95,22 +97,34 @@ class database(object):
                 if row[dbheader.SEARCHKEYWORDS] == "":
                     searchkeywords = []
                 else:
-                    searchkeywords = row[dbheader.SEARCHKEYWORDS].split(';')
+                    searchkeywords = row[dbheader.SEARCHKEYWORDS].split(',')
                 
                 if row[dbheader.FILTERKEYWORDS] == "":
                     filterkeywords = []
                 else:
-                    filterkeywords = row[dbheader.FILTERKEYWORDS].split(';')
+                    filterkeywords = row[dbheader.FILTERKEYWORDS].split(',')
+                
+                if row[dbheader.FIRM] == "None":
+                    firm = None
+                else:
+                    firm = row[dbheader.FIRM]
+                    
+                if row[dbheader.TITLE] == "None":
+                    title = None
+                else:
+                    title = row[dbheader.TITLE]
                 
                 self.ads.append(ad(row[dbheader.LINK],
                                    foundate,
                                    releasedate,
                                    searchkeywords,
                                    filterkeywords,
-                                   row[dbheader.FIRM]))
+                                   firm,
+                                   title))
     
     def write(self):
         fieldnames = [dbheader.FOUNDDATE,
+                      dbheader.TITLE,
                       dbheader.FIRM,
                       dbheader.RELEASEDATE,
                       dbheader.SEARCHKEYWORDS,
@@ -118,7 +132,7 @@ class database(object):
                       dbheader.LINK]
         
         with open(self.path, 'wb') as csvfile:
-            writer = csv.DictWriter(csvfile, dialect='excel', fieldnames=fieldnames, delimiter=',')
+            writer = csv.DictWriter(csvfile, dialect='excel', fieldnames=fieldnames, delimiter=';')
         
             writer.writeheader()
             for ad in self.ads:
@@ -132,11 +146,12 @@ class database(object):
                 except AttributeError:
                     releasedate = ""
                 
-                searchkeywords = ";".join(ad.searchkeywords)
+                searchkeywords = ",".join(ad.searchkeywords)
                 
-                filterkeywords = ";".join(ad.filterkeywords)
+                filterkeywords = ",".join(ad.filterkeywords)
                 
                 writer.writerow({dbheader.FOUNDDATE: foundate,
+                                 dbheader.TITLE: ad.title,
                                  dbheader.FIRM: ad.firm,
                                  dbheader.RELEASEDATE: releasedate,
                                  dbheader.SEARCHKEYWORDS: searchkeywords,
@@ -152,20 +167,4 @@ class database(object):
                 self.ads[self.ads.index(ad)].merge(ad)
             else:
                 self.ads.append(ad)
-                
-
-
-if __name__ == '__main__':
-    db = database('./db.csv')
-    db.ads.append(ad("toto", None, None, ['Java'], ['Java'], "Consept"))
-    db.ads.append(ad("tata", None, None, ['Java'], ['Java'], "Consept"))
-    db.ads.append(ad("tété", None, None, ['Java'], ['Java'], "Consept"))
-    db.ads.append(ad("toto", datetime.now(), datetime.now(), ['C++'], ['C++'], "Sopra"))
-    
-    
-    db.merge()
-    
-    print(db)
-    
-    db.write()
     
