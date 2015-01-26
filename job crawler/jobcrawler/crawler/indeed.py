@@ -10,6 +10,7 @@ import bs4
 from jobcrawler.core import toolbox, dbmanagement
 from jobcrawler.crawler.defaultcrawler import defaultCrawler
 from datetime import datetime, timedelta
+from unidecode import unidecode
 
 class IndeedCrawler(defaultCrawler):
     def __init__(self, database):
@@ -50,9 +51,31 @@ class IndeedCrawler(defaultCrawler):
                 try:
                     temp = annonce.find('span', {'class': 'company'})
                     temp = temp.find('span')
-                    firm = temp.contents[0].encode("utf-8")
+                    firm = ""
+                    for s in temp.contents:
+                        try:
+                            firm += s
+                        except:
+                            pass
+                    
+                    firm = unidecode(firm)
+                
                 except:
                     firm = "Inconnu"
+                    
+                try:
+                    temp = annonce.find('h2', {'class': 'jobtitle'})
+                    temp = temp.find('a')
+                    title = ""
+                    for s in temp.contents:
+                        try:
+                            title += s
+                        except:
+                            pass
+                    
+                    title = unidecode(title)
+                except:
+                    title = "Inconnu"
                 
                 try:
                     temp = annonce.find('span', {'class', 'date'})
@@ -71,7 +94,8 @@ class IndeedCrawler(defaultCrawler):
                                                          founddate=datetime.now(),
                                                          releasedate=releasedate,
                                                          searchkeywords=[keyword],
-                                                         firm=firm))
+                                                         firm=firm,
+                                                         title=title))
 
 if __name__=='__main__':
     db = dbmanagement.database("./db.csv")
