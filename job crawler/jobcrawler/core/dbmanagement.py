@@ -92,8 +92,15 @@ class database(object):
                 except ValueError:
                     releasedate = None
                 
-                searchkeywords = row[dbheader.SEARCHKEYWORDS].split(';')
-                filterkeywords = row[dbheader.FILTERKEYWORDS].split(';')
+                if row[dbheader.SEARCHKEYWORDS] == "":
+                    searchkeywords = []
+                else:
+                    searchkeywords = row[dbheader.SEARCHKEYWORDS].split(';')
+                
+                if row[dbheader.FILTERKEYWORDS] == "":
+                    filterkeywords = []
+                else:
+                    filterkeywords = row[dbheader.FILTERKEYWORDS].split(';')
                 
                 self.ads.append(ad(row[dbheader.LINK],
                                    foundate,
