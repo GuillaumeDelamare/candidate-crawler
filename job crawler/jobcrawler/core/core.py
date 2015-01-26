@@ -16,12 +16,14 @@ class core(object):
         db.ads = []
         
         for ad in temp:
+            print("Treat this announce : {}".format(ad.link))
             try:
                 htmlpage = urllib.urlopen(ad.link).read()
                 soup = bs4.BeautifulSoup(htmlpage)
                 
                 word_found = False
                 for word in excludelist:
+                    print("    Search this word {}".format(word))
                     if soup.body.find_all(text=re.compile(word, re.IGNORECASE)) != []:
                         word_found = True
                 
@@ -41,11 +43,13 @@ class core(object):
         db.ads = []
         
         for ad in temp:
+            print("Treat this announce : {}".format(ad.link))
             try:
                 htmlpage = urllib.urlopen(ad.link).read()
                 soup = bs4.BeautifulSoup(htmlpage)
  
                 for word in wordslist:
+                    print("    Search this word {}".format(word))
                     if soup.body.find_all(text=re.compile(word, re.IGNORECASE)) != []:
                         ad.filterkeywords.append(word)
                 
@@ -83,11 +87,11 @@ class core(object):
 if __name__=='__main__':
     runapp = core("./db.csv")
     print("Found announces")
-    runapp.found_annonce(["Java"], 3, "Pays de la Loire", "toto", ic=True)
+    runapp.found_annonce(["Ingenieur","Developpement","logiciel","Python","Java","Script","Bash", "C"], 7, "Pays de la Loire", "toto", ic=True)
     print("Done")
     print("Exclude announces")
     runapp.exclude_annouces(["interim", "intérim", "commercial"])
     print("Done")
     print("Filter announces")
-    runapp.filter_announces(["Ingénieur", "Java"])
+    runapp.filter_announces(["Python","Java","Script","Bash", "C"])
     print("Done")

@@ -44,7 +44,7 @@ class IndeedCrawler(defaultCrawler):
         for keyword in keywords:
             uri = "/emplois?as_and={0}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&sr=directhire&radius=0&l={1}&fromage={2}&limit=50&sort=date&psf=advsrch".format(keyword, region_code, daterange)
             soup = bs4.BeautifulSoup(toolbox.html_reader(self.webdomain,uri))
-            
+            print(uri)
             for annonce in soup.find_all('div', {'class': 'row  result'}):
                 link = "http://{0}{1}".format(self.webdomain, annonce.find('a').get('href'))
                 
