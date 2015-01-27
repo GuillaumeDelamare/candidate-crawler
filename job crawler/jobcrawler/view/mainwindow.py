@@ -31,11 +31,16 @@ class MainWindow(QMainWindow):
         self.log_gb = QGroupBox(u"Logs")
 
         self.apec_cb = QCheckBox(u"APEC")
+        self.apec_cb.setDisabled(True)
         self.caoe_cb = QCheckBox(u"CAO Emploi")
+        self.caoe_cb.setDisabled(True)
         self.inde_cb = QCheckBox(u"Indeed")
         self.mons_cb = QCheckBox(u"Monster Job")
+        self.mons_cb.setDisabled(True)
         self.pole_cb = QCheckBox(u"Pole Enmploi")
+        self.pole_cb.setDisabled(True)
         self.regi_cb = QCheckBox(u"Région Job")
+        self.regi_cb.setDisabled(True)
         
         self.search_label = QLabel(u"Mots-clé de recherche")
         self.filter_label = QLabel(u"Critère de filtrage")
@@ -139,17 +144,13 @@ class MainWindow(QMainWindow):
             pole = self.pole_cb.isChecked()
             regi = self.regi_cb.isChecked()
             
-            searchkeyword = unicode(self.search_qle.text()).split(",")
-            filterkeyword = self.filter_qle.text().split(",")
-            
-            #TODO first work
-            print(searchkeyword[0])
-            print(searchkeyword[0].encode('utf-8'))
+            searchkeyword = unidecode(unicode(self.search_qle.text())).split(",")
+            filterkeyword = unidecode(unicode(self.filter_qle.text())).split(",")
             
             daterange = self.daterange_sb.value()
             region = str(self.region_cb.currentText())
             
-            dbpath = str(toolbox.getconfigvalue("GENERAL", "dbfile"))
+            dbpath = toolbox.getconfigvalue("GENERAL", "dbfile")
             excludelist = unidecode(toolbox.getconfigvalue("GENERAL", "excludes")).split(",")
             
             c = core(dbpath)
@@ -160,7 +161,8 @@ class MainWindow(QMainWindow):
             self.stop_button.setDisabled(True)
             self.start_button.setEnabled(True)
         
-        threading.Thread(target=run).start()
+        self.thread = threading.Thread(target=run)
+        self.thread.start()
         
     
     @pyqtSlot()

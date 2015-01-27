@@ -38,14 +38,15 @@ class IndeedCrawler(defaultCrawler):
                         "PACA": "Provence-Alpes-C%C3%B4te+d%27Azur",
                         "Rhône-Alpes": "Rh%C3%B4ne-Alpes"}
 
-    def run(self ,keywords, daterange, region):
+    def run(self, keywords, daterange, region):
         region_code = self.regions[region]
 
         for keyword in keywords:
             #TODO treat the accent case
-            uri = "/emplois?as_and={0}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&sr=directhire&radius=0&l={1}&fromage={2}&limit=50&sort=date&psf=advsrch".format(keyword, region_code, daterange)
+            uri = u"/emplois?as_and={0}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&sr=directhire&radius=0&l={1}&fromage={2}&limit=50&sort=date&psf=advsrch".format(keyword, region_code, daterange)
             soup = bs4.BeautifulSoup(toolbox.html_reader(self.webdomain,uri))
             print(uri)
+            print(soup)
             for annonce in soup.find_all('div', {'class': 'row  result'}):
                 link = "http://{0}{1}".format(self.webdomain, annonce.find('a').get('href'))
                 
@@ -101,7 +102,7 @@ class IndeedCrawler(defaultCrawler):
 if __name__=='__main__':
     db = dbmanagement.database("./db.csv")
     runapp = IndeedCrawler(db)
-    runapp.run(["Java","Python","Ingenieur"], 3, "Pays de la Loire")
+    runapp.run(["Ingénieur"], 3, "Pays de la Loire")
     
     db.merge()
     db.write()
