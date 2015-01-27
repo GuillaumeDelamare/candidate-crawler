@@ -10,6 +10,9 @@ from PyQt4.QtGui import QMainWindow, QHBoxLayout, QWidget, QGroupBox, QVBoxLayou
 from jobcrawler.core import toolbox
 from PyQt4 import QtGui
 from PyQt4.QtCore import pyqtSlot
+from jobcrawler.core.core import core
+import threading
+from unidecode import unidecode
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -125,8 +128,40 @@ class MainWindow(QMainWindow):
     
     @pyqtSlot()
     def start(self):
-        self.start_button.setDisabled(True)
-        self.stop_button.setEnabled(True)
+        def run():
+            self.start_button.setDisabled(True)
+            self.stop_button.setEnabled(True)
+            
+            inde = self.inde_cb.isChecked()
+            apec = self.apec_cb.isChecked()
+            caoe = self.caoe_cb.isChecked()
+            mons = self.mons_cb.isChecked()
+            pole = self.pole_cb.isChecked()
+            regi = self.regi_cb.isChecked()
+            
+            searchkeyword = unicode(self.search_qle.text()).split(",")
+            filterkeyword = self.filter_qle.text().split(",")
+            
+            #TODO first work
+            print(searchkeyword[0])
+            print(searchkeyword[0].encode('utf-8'))
+            
+            daterange = self.daterange_sb.value()
+            region = str(self.region_cb.currentText())
+            
+            dbpath = str(toolbox.getconfigvalue("GENERAL", "dbfile"))
+            excludelist = unidecode(toolbox.getconfigvalue("GENERAL", "excludes")).split(",")
+            
+            c = core(dbpath)
+            c.found_annonce(searchkeyword, daterange, region, None, apec, caoe, inde, mons, pole, regi)
+            c.exclude_annouces(excludelist)
+            c.filter_announces(filterkeyword)
+            
+            self.stop_button.setDisabled(True)
+            self.start_button.setEnabled(True)
+        
+        threading.Thread(target=run).start()
+        
     
     @pyqtSlot()
     def stop(self):
