@@ -42,6 +42,7 @@ class IndeedCrawler(defaultCrawler):
         region_code = self.regions[region]
 
         for keyword in keywords:
+            #TODO treat the accent case
             uri = "/emplois?as_and={0}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&sr=directhire&radius=0&l={1}&fromage={2}&limit=50&sort=date&psf=advsrch".format(keyword, region_code, daterange)
             soup = bs4.BeautifulSoup(toolbox.html_reader(self.webdomain,uri))
             print(uri)
