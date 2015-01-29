@@ -4,15 +4,15 @@ Created on 26 janv. 2015
 
 @author: Guillaume
 '''
-from PyQt4.QtGui import QMainWindow, QHBoxLayout, QWidget, QGroupBox, QVBoxLayout, QCheckBox,\
-    QLabel, QLineEdit, QPushButton, QSpinBox, QComboBox, QTextEdit, QMenu,\
-    QAction
-from jobcrawler.core import toolbox
-from PyQt4 import QtGui
-from PyQt4.QtCore import pyqtSlot
-from jobcrawler.core.core import core
+
 import threading
 from unidecode import unidecode
+from PyQt4.QtGui import QMainWindow, QHBoxLayout, QWidget, QGroupBox, QVBoxLayout, QCheckBox,\
+                        QLabel, QLineEdit, QPushButton, QSpinBox, QComboBox, QTextEdit, QMenu,\
+                        QAction, qApp
+from PyQt4.QtCore import pyqtSlot
+from jobcrawler.core import toolbox, core
+from jobcrawler.view.dialogs import aboutdialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -121,11 +121,17 @@ class MainWindow(QMainWindow):
         menubar.addMenu(self.help_menu)
     
     def _create_controller(self):
-        exitAction = QAction('Quitter', self)        
-        exitAction.setStatusTip('Quitter Job Crawler')
-        exitAction.triggered.connect(QtGui.qApp.quit)
+        exitAction = QAction(u'Quitter', self)        
+        exitAction.setStatusTip(u'Quitter Job Crawler')
+        exitAction.triggered.connect(qApp.quit)
+        
+        aboutAction = QAction(u'A propos', self)
+        aboutAction.setStatusTip(u'Afficher la fenêtre à propos')
+        aboutAction.triggered.connect(self.about)
+        
         
         self.file_menu.addAction(exitAction)
+        self.help_menu.addAction(aboutAction)
         
         self.start_button.clicked.connect(self.start)
         self.stop_button.clicked.connect(self.stop)
@@ -153,7 +159,7 @@ class MainWindow(QMainWindow):
             dbpath = toolbox.getconfigvalue("GENERAL", "dbfile")
             excludelist = unidecode(toolbox.getconfigvalue("GENERAL", "excludes")).split(",")
             
-            c = core(dbpath)
+            c = core.core(dbpath)
             c.found_annonce(searchkeyword, daterange, region, None, apec, caoe, inde, mons, pole, regi)
             c.exclude_annouces(excludelist)
             c.filter_announces(filterkeyword)
@@ -170,4 +176,6 @@ class MainWindow(QMainWindow):
         self.stop_button.setDisabled(True)
         self.start_button.setEnabled(True)
         
-    
+    @pyqtSlot()
+    def about(self):
+        self.aboutwindow = aboutdialog.AboutDialog(self).exec_()
