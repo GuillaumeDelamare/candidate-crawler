@@ -12,7 +12,7 @@ from PyQt4.QtGui import QMainWindow, QHBoxLayout, QWidget, QGroupBox, QVBoxLayou
                         QAction, qApp
 from PyQt4.QtCore import pyqtSlot
 from jobcrawler.core import toolbox, core
-from jobcrawler.view.dialogs import aboutdialog
+from jobcrawler.view.dialogs import aboutdialog, admindialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -121,6 +121,10 @@ class MainWindow(QMainWindow):
         menubar.addMenu(self.help_menu)
     
     def _create_controller(self):
+        adminAction = QAction(u'Administration', self)        
+        adminAction.setStatusTip(u'Régler les paramètres de l\'application')
+        adminAction.triggered.connect(self.admin)
+        
         exitAction = QAction(u'Quitter', self)        
         exitAction.setStatusTip(u'Quitter Job Crawler')
         exitAction.triggered.connect(qApp.quit)
@@ -129,8 +133,10 @@ class MainWindow(QMainWindow):
         aboutAction.setStatusTip(u'Afficher la fenêtre à propos')
         aboutAction.triggered.connect(self.about)
         
-        
+        self.file_menu.addAction(adminAction)
+        self.file_menu.addSeparator()
         self.file_menu.addAction(exitAction)
+        
         self.help_menu.addAction(aboutAction)
         
         self.start_button.clicked.connect(self.start)
@@ -179,3 +185,7 @@ class MainWindow(QMainWindow):
     @pyqtSlot()
     def about(self):
         self.aboutwindow = aboutdialog.AboutDialog(self).exec_()
+    
+    @pyqtSlot()
+    def admin(self):
+        admindialog.AdminDialog(self).exec_()
