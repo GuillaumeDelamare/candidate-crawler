@@ -8,6 +8,9 @@
 
 import bs4, datetime
 from jobcrawler.core import toolbox
+import logging
+
+logger = logging.getLogger("jobcrawler")
 
 class RegionjobCrawler(object):
     def __init__(self):
@@ -51,7 +54,7 @@ class RegionjobCrawler(object):
         
         for webdomain in webdomains:
             if not toolbox.ping_website(webdomain):
-                print("Error : {0} not responding".format(webdomain))
+                logger.error("{0} not responding".format(webdomain))
                 break
             
             uri = self.uris[domain]          
@@ -82,7 +85,3 @@ class RegionjobCrawler(object):
         regionjob_result = self._regionjob_crawler(domain, daterange, region)
 
         return regionjob_result
-
-if __name__=='__main__':
-    runapp = RegionjobCrawler()
-    print(runapp.run_program("Info-Software", 3, "Pays de la Loire"))

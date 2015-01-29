@@ -6,20 +6,11 @@
 # Crawl CAOemploi to find interesting jobs #
 ############################################
 
-### External modules importation ###
-
-import re
-import bs4
-
-### End of external modules importation ###
-
-### Custom modules importation ###
-
+import re, bs4, logging
 from jobcrawler.core import toolbox
 
-### End of custom modules importation ###
+logger = logging.getLogger("jobcrawler")
 
-### Classes ###
 class CaoemploiCrawler(object):
 
     def _caoemploi_crawler(self, region):
@@ -28,7 +19,7 @@ class CaoemploiCrawler(object):
         webdomain = "www.cao-emplois.com"
 
         if not toolbox.ping_website(webdomain):
-            print("{0} not responding".format(webdomain))
+            logger.error("{0} not responding".format(webdomain))
             return
 
         if region == "Toute la France":
@@ -88,20 +79,10 @@ class CaoemploiCrawler(object):
 
     def run_program(self, region="Midi-Pyrénées"):
         """Method to run program"""
-        print("Crawling CAOemploi ...")
+        logger.info("Crawling CAOemploi ...")
 
         caoemploi_result = self._caoemploi_crawler(region)
 
-        print("CAOemploi crawled")
+        logger.info("CAOemploi crawled")
 
         return caoemploi_result
-
-### End of Classes ###
-
-### Main program ###
-
-if __name__=='__main__':
-    runapp = CaoemploiCrawler()
-    print(runapp.run_program())
-
-### End of Main program ###

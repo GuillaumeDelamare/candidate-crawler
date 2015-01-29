@@ -6,11 +6,13 @@
 # Crawl Indeed to find interesting jobs #
 #########################################
 
-import bs4
+import bs4, logging
 from jobcrawler.core import toolbox, dbmanagement
 from jobcrawler.crawler.defaultcrawler import defaultCrawler
 from datetime import datetime, timedelta
 from unidecode import unidecode
+
+logger = logging.getLogger("jobcrawler")
 
 class IndeedCrawler(defaultCrawler):
     def __init__(self, database):
@@ -39,14 +41,14 @@ class IndeedCrawler(defaultCrawler):
                         "Rhône-Alpes": "Rh%C3%B4ne-Alpes"}
 
     def run(self, keywords, daterange, region):
+        defaultCrawler.run(self)
+        
         region_code = self.regions[region]
 
         for keyword in keywords:
-            #TODO treat the accent case
-            uri = u"/emplois?as_and={0}&as_phr=&as_any=&as_not=&as_ttl=&as_cmp=&jt=all&st=&sr=directhire&radius=0&l={1}&fromage={2}&limit=50&sort=date&psf=advsrch".format(keyword, region_code, daterange)
+            uri = u"/emplois?as_and={0}&l={1}&fromage={2}&limit=50&sort=date&psf=advsrch".format(keyword, region_code, daterange)
             soup = bs4.BeautifulSoup(toolbox.html_reader(self.webdomain,uri))
-            print(uri)
-            print(soup)
+            logger.debug(uri)
             for annonce in soup.find_all('div', {'class': 'row  result'}):
                 link = "http://{0}{1}".format(self.webdomain, annonce.find('a').get('href'))
                 
@@ -98,11 +100,3 @@ class IndeedCrawler(defaultCrawler):
                                                          searchkeywords=[keyword],
                                                          firm=firm,
                                                          title=title))
-
-if __name__=='__main__':
-    db = dbmanagement.database("./db.csv")
-    runapp = IndeedCrawler(db)
-    runapp.run(["Ingénieur"], 3, "Pays de la Loire")
-    
-    db.merge()
-    db.write()

@@ -6,20 +6,11 @@
 # Crawl Aeroemploiformation to find interesting jobs #
 ######################################################
 
-### External modules importation ###
-
-import re
-import bs4
-
-### End of external modules importation ###
-
-### Custom modules importation ###
-
+import re, bs4, logging
 from jobcrawler.core import toolbox
 
-### End of custom modules importation ###
+logger = logging.getLogger("jobcrawler")
 
-### Classes ###
 class AeroemploiformationCrawler(object):
 
     def _aeroemploiformation_crawler(self, domain, region):
@@ -28,7 +19,7 @@ class AeroemploiformationCrawler(object):
         webdomain = "www.aeroemploiformation.com"
 
         if not toolbox.ping_website(webdomain):
-            print("{0} not responding".format(webdomain))
+            logger.error("{0} not responding".format(webdomain))
             return
 
         if region == "Toute la France":
@@ -91,20 +82,11 @@ class AeroemploiformationCrawler(object):
 
     def run_program(self, domain="Engineering", region="Midi-Pyrénées"):
         """Method to run program"""
-        print("Crawling Aeroemploiformation ...")
+        logger.info("Crawling Aeroemploiformation ...")
 
         aeroemploiformation_result = self._aeroemploiformation_crawler(domain, region)
 
-        print("Aeroemploiformation crawled")
+        logger.info("Aeroemploiformation crawled")
 
         return aeroemploiformation_result
 
-### End of Classes ###
-
-### Main program ###
-
-if __name__=='__main__':
-    runapp = AeroemploiformationCrawler()
-    print(runapp.run_program())
-
-### End of Main program ###

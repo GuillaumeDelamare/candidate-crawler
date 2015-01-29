@@ -6,9 +6,11 @@
 # Crawl Apec to find interesting jobs #
 #######################################
 
-import re, bs4
+import re, bs4, logging
 from jobcrawler.core import toolbox
 from datetime import datetime
+
+logger = logging.getLogger("jobcrawler")
 
 class ApecCrawler(object):
     def __init__(self):
@@ -41,7 +43,7 @@ class ApecCrawler(object):
         site_list = []
 
         if not toolbox.ping_website(self.webdomain):
-            print("{0} not responding".format(self.webdomain))
+            logger.error("{0} not responding".format(self.webdomain))
             return
 
         region_code = self.regions[region]
@@ -59,9 +61,7 @@ class ApecCrawler(object):
                     pubdate = datetime.date.today()
                     
                 link = re.sub(("\?(.*?)$"),'',link.get("href"))
-                print(link)
                 if toolbox.compute_duration(pubdate) < daterange:
-                    print("added")
                     site_list.append("http://{0}{1}".format(self.webdomain,link))
 
         site_list = list(set(site_list))
@@ -72,8 +72,3 @@ class ApecCrawler(object):
         """Method to run program"""
         apec_result = self._apec_crawler(keywords, daterange, region)
         return apec_result
-
-
-if __name__=='__main__':
-    runapp = ApecCrawler()
-    print(runapp.run_program(["Java"], 3, "Pays de la Loire"))

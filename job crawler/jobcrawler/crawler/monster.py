@@ -10,6 +10,9 @@
 
 import re, bs4
 from jobcrawler.core import toolbox
+import logging
+
+logger = logging.getLogger("jobcrawler")
 
 class MonsterCrawler(object):
     def __init__(self):
@@ -42,7 +45,7 @@ class MonsterCrawler(object):
         site_list = []
 
         if not toolbox.ping_website(self.webdomain):
-            print("{0} not responding".format(self.webdomain))
+            logger.error("{0} not responding".format(self.webdomain))
             return
 
         region_code = self.regions[region]
@@ -63,7 +66,3 @@ class MonsterCrawler(object):
         monster_result = self._monster_crawler(keywords, daterange, region)
 
         return monster_result
-    
-if __name__=='__main__':
-    runapp = MonsterCrawler()
-    print(runapp.run_program(["Java"], 3, "Pays de la Loire"))
