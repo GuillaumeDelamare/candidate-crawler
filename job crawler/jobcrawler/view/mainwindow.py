@@ -5,14 +5,54 @@ Created on 26 janv. 2015
 @author: Guillaume
 '''
 
-import threading
+import threading, os, sys, logging
 from unidecode import unidecode
 from PyQt4.QtGui import QMainWindow, QHBoxLayout, QWidget, QGroupBox, QVBoxLayout, QCheckBox,\
                         QLabel, QLineEdit, QPushButton, QSpinBox, QComboBox, QTextEdit, QMenu,\
-                        QAction, qApp
-from PyQt4.QtCore import pyqtSlot
+                        QAction, qApp, QMessageBox
+from PyQt4.QtCore import pyqtSlot, QObject, pyqtSignal
 from jobcrawler.core import toolbox, core
 from jobcrawler.view.dialogs import aboutdialog, admindialog
+
+logger = logging.getLogger("jobcrawler")
+
+class QtHandler(logging.Handler):
+    def __init__(self):
+        logging.Handler.__init__(self)
+    def emit(self, record):
+        record = self.format(record)
+        if record: XStream.stdout().write('%s\n'%record)
+
+handler = QtHandler()
+handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+logger.addHandler(handler)
+logger.setLevel(logging.DEBUG)
+
+class XStream(QObject):
+    _stdout = None
+    _stderr = None
+    messageWritten = pyqtSignal(str)
+    def flush( self ):
+        pass
+    def fileno( self ):
+        return -1
+    def write( self, msg ):
+        if ( not self.signalsBlocked() ):
+            self.messageWritten.emit(unicode(msg))
+    @staticmethod
+    def stdout():
+        if ( not XStream._stdout ):
+            XStream._stdout = XStream()
+            sys.stdout = XStream._stdout
+        return XStream._stdout
+    @staticmethod
+    def stderr():
+        if ( not XStream._stderr ):
+            XStream._stderr = XStream()
+            sys.stderr = XStream._stderr
+        return XStream._stderr
+
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -141,13 +181,62 @@ class MainWindow(QMainWindow):
         
         self.start_button.clicked.connect(self.start)
         self.stop_button.clicked.connect(self.stop)
+        
+        # Controller for logging
+        XStream.stdout().messageWritten.connect( self.log_te.insertPlainText )
+        XStream.stderr().messageWritten.connect( self.log_te.insertPlainText )
     
+    def validate_fields(self):
+        error = False
+        error_list = u""
+        
+        inde = self.inde_cb.isChecked()
+        apec = self.apec_cb.isChecked()
+        caoe = self.caoe_cb.isChecked()
+        mons = self.mons_cb.isChecked()
+        pole = self.pole_cb.isChecked()
+        regi = self.regi_cb.isChecked()
+        
+        if  not (inde or apec or caoe or mons or pole or regi):
+            error = True
+            error_list += u"<li>Site à requêter</li>"
+            
+        searchkeyword = unidecode(unicode(self.search_qle.text()))
+        
+        if searchkeyword == u"":
+            error = True
+            error_list += u"<li>Mots clé de recherche</li>"
+        
+        filterkeyword = unidecode(unicode(self.filter_qle.text()))
+        
+        if filterkeyword == u"":
+            error = True
+            error_list += u"<li>Critère de filtrage</li>"
+        
+        if error:
+            message = u"Veuillez renseigner le(s) champ(s) suivant(s) :<ul>" + error_list + u"</ul>"
+            QMessageBox.warning(self, u"Erreur", message)
+        
+        return not error
     
+    def validate_admin(self):
+        dbpath = toolbox.getconfigvalue("GENERAL", "dbfile")
+        
+        if not (dbpath != "" and os.access(os.path.dirname(dbpath), os.W_OK)):
+            message = u"<p>Veuiller renseigner l'emplacement de la base de données dans l'administration (Fichier > Administration).</p>"\
+                      u"<p>Si cela a déjà été fait, ce message signifie que vous n'avez pas les droits d'écriture dans ce répertoire. Veuillez déplacer la base de données et reconfigurer l'emplacement dans l'administration.</p>"
+            QMessageBox.warning(self, u"Erreur", message)
+            return False
+        
+        return True
+        
     @pyqtSlot()
     def start(self):
         def run():
             self.start_button.setDisabled(True)
             self.stop_button.setEnabled(True)
+            
+            logger.info(u"Début de la recherche d'annonces")
             
             inde = self.inde_cb.isChecked()
             apec = self.apec_cb.isChecked()
@@ -170,15 +259,18 @@ class MainWindow(QMainWindow):
             c.exclude_annouces(excludelist)
             c.filter_announces(filterkeyword)
             
+            logger.info(u"Fin de la recherche d'annonces")
+            
             self.stop_button.setDisabled(True)
             self.start_button.setEnabled(True)
         
-        self.thread = threading.Thread(target=run)
-        self.thread.start()
-        
+        if self.validate_fields() and self.validate_admin():
+            self.thread = threading.Thread(target=run)
+            self.thread.start()
     
     @pyqtSlot()
     def stop(self):
+        self.thread._Thread__stop()
         self.stop_button.setDisabled(True)
         self.start_button.setEnabled(True)
         

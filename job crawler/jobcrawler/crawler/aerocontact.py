@@ -6,20 +6,12 @@
 # Crawl Aerocontact to find interesting jobs #
 ##############################################
 
-### External modules importation ###
-
-import re
-import bs4
-
-### End of external modules importation ###
-
-### Custom modules importation ###
-
+import re, bs4
 from jobcrawler.core import toolbox
+import logging
 
-### End of custom modules importation ###
+logger = logging.getLogger("jobcrawler")
 
-### Classes ###
 class AerocontactCrawler(object):
     def _aerocontact_crawler(self, keywords, daterange, region):
         """Crawler for Aerocontact"""
@@ -27,7 +19,7 @@ class AerocontactCrawler(object):
         webdomain = "www.aerocontact.com"
 
         if not toolbox.ping_website(webdomain):
-            print("{0} not responding".format(webdomain))
+            logger.error("{0} not responding".format(webdomain))
             return
 
         if region == "Toute la France":
@@ -82,7 +74,6 @@ class AerocontactCrawler(object):
                 pubtag = link.findNext("span", style='color: #777;')
                 if pubtag is not None:
                     pubdate = pubtag.contents[0]
-                    print(pubdate)
                     if pubdate is not None:
                         pubday = pubdate[0:2]
                         if pubday[0:1] == "0":

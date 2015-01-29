@@ -8,13 +8,10 @@
 
 ### External modules importation ###
 
-import datetime
-import httplib
-import ConfigParser
+import datetime, httplib, ConfigParser
+import logging
 
-### End of external modules importation ###
-
-### Functions ###
+logger = logging.getLogger("jobcrawler")
 
 def timestamp():
     """Create a unique time stamp"""
@@ -47,8 +44,8 @@ def html_reader(domainName,uri):
     r1 = conn.getresponse()
 
     if r1.reason != "OK":
-        print("{0} - {1}".format(r1.status, r1.reason))
-        print(r1.getheader('Location'))
+        logger.error("{0} - {1}".format(r1.status, r1.reason))
+        logger.error(r1.getheader('Location'))
 
     htmlpage = r1.read()
 

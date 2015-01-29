@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-import urllib, bs4, re
+import urllib, bs4, re, logging
 from jobcrawler.core import dbmanagement
 from jobcrawler.crawler import apec, caoemploi, indeed, monster, poleemploi,\
     regionjob
+    
+logger = logging.getLogger("jobcrawler")
 
 class core(object):
     def __init__(self, dbpath):
@@ -16,14 +18,12 @@ class core(object):
         db.ads = []
         
         for ad in temp:
-            print("Treat this announce : {}".format(ad.link))
             try:
                 htmlpage = urllib.urlopen(ad.link).read()
                 soup = bs4.BeautifulSoup(htmlpage)
                 
                 word_found = False
                 for word in excludelist:
-                    print("    Search this word {}".format(word))
                     if soup.body.find_all(text=re.compile(word, re.IGNORECASE)) != []:
                         word_found = True
                 
@@ -31,8 +31,8 @@ class core(object):
                     db.ads.append(ad)
  
             except Exception as e:
-                print("Error on link {0}".format(ad.link))
-                print(e)
+                logger.error("Error on link {0}".format(ad.link))
+                logger.error(e)
                 
         db.merge()
         db.write()
@@ -43,13 +43,11 @@ class core(object):
         db.ads = []
         
         for ad in temp:
-            print("Treat this announce : {}".format(ad.link))
             try:
                 htmlpage = urllib.urlopen(ad.link).read()
                 soup = bs4.BeautifulSoup(htmlpage)
  
                 for word in wordslist:
-                    print("    Search this word {}".format(word))
                     if soup.body.find_all(text=re.compile(word, re.IGNORECASE)) != []:
                         ad.filterkeywords.append(word)
                 
@@ -57,8 +55,8 @@ class core(object):
                     db.ads.append(ad)
  
             except Exception as e:
-                print("Error on link {0}".format(ad.link))
-                print(e)
+                logger.error("Error on link {0}".format(ad.link))
+                logger.error(e)
         
         db.merge()
         db.write()
@@ -86,12 +84,12 @@ class core(object):
 
 if __name__=='__main__':
     runapp = core("./db.csv")
-    print("Found announces")
-    runapp.found_annonce(["Ingenieur","Developpement","logiciel","Python","Java","Script","Bash", "C"], 7, "Pays de la Loire", "toto", ic=True)
-    print("Done")
-    print("Exclude announces")
-    runapp.exclude_annouces(["interim", "intérim", "commercial"])
-    print("Done")
-    print("Filter announces")
-    runapp.filter_announces(["Python","Java","Script","Bash", "C"])
-    print("Done")
+    logger.info("Found announces")
+    runapp.found_annonce([u"Ingénieur"], 6, "Pays de la Loire", "toto", ic=True)
+    logger.info("Done")
+    logger.info("Exclude announces")
+    runapp.exclude_annouces([u"interim", u"intérim", u"commercial"])
+    logger.info("Done")
+    logger.info("Filter announces")
+    runapp.filter_announces([u"Ingénieur"])
+    logger.info("Done")
