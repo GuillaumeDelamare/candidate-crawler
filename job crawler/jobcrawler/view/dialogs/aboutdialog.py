@@ -9,7 +9,7 @@ from PyQt4.QtCore import Qt
 
 class AboutDialog(QDialog):
     def __init__(self, parent=None):
-        QDialog.__init__(self, parent=None)
+        QDialog.__init__(self, parent=parent)
         
         self._create_components()
         self._place_components()
@@ -42,12 +42,11 @@ class AboutDialog(QDialog):
         self.creator.setAlignment(Qt.AlignCenter)
         self.creator.setFont(font)
         
-        self.okbutton = QPushButton("OK")
+        self.ok_button = QPushButton("OK")
     
     def _place_components(self):
         control_layout = QHBoxLayout()
-        control_layout.setSizeConstraint(QHBoxLayout.SetMinimumSize)
-        control_layout.addWidget(self.okbutton)
+        control_layout.addWidget(self.ok_button)
         
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.title)
@@ -55,9 +54,10 @@ class AboutDialog(QDialog):
         main_layout.addSpacing(10)
         main_layout.addWidget(self.creator)
         main_layout.addSpacing(10)
-        main_layout.addWidget(self.okbutton, 0, Qt.AlignCenter)
+        main_layout.addWidget(self.ok_button, 0, Qt.AlignCenter)
         
         self.setLayout(main_layout)
     
     def _create_controller(self):
-        self.okbutton.clicked.connect(self.close)
+        self.ok_button.clicked.connect(self.close)
+        
