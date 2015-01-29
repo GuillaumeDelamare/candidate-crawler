@@ -1,3 +1,3 @@
 export PYTHONPATH=$PYTHONPATH:./
 
-python ./jobcrawler/view/Admin.py
+python ./jobcrawler/main.py
