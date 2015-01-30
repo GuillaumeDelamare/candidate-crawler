@@ -15,6 +15,7 @@ from jobcrawler.core import toolbox, core
 from jobcrawler.view.dialogs import aboutdialog, admindialog
 
 logger = logging.getLogger("jobcrawler")
+logger.setLevel(logging.INFO)
 
 class QtHandler(logging.Handler):
     def __init__(self):
@@ -25,8 +26,10 @@ class QtHandler(logging.Handler):
 
 handler = QtHandler()
 handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+handler.setLevel(logging.INFO)
+
 logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+
 
 class XStream(QObject):
     _stdout = None
