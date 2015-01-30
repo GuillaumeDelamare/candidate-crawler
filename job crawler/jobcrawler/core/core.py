@@ -89,13 +89,23 @@ class core(object):
 
 
 if __name__=='__main__':
+    import sys
+    
+    logger.setLevel(logging.DEBUG)
+    
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.DEBUG)
+    handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+    
+    logger.addHandler(handler)
+    
     runapp = core("./db.csv")
-    logger.info("Found announces")
-    runapp.found_annonce([u"Ingénieur"], 6, "Pays de la Loire", "toto", ic=True)
-    logger.info("Done")
-    logger.info("Exclude announces")
+    logger.info(u"Found announces")
+    runapp.found_annonce([u"Python"], 6, "Pays de la Loire", "toto", ic=True)
+    logger.info(u"Done")
+    logger.info(u"Exclude announces")
     runapp.exclude_annouces([u"interim", u"intérim", u"commercial"])
-    logger.info("Done")
-    logger.info("Filter announces")
+    logger.info(u"Done")
+    logger.info(u"Filter announces")
     runapp.filter_announces([u"Ingénieur"])
-    logger.info("Done")
+    logger.info(u"Done")
