@@ -26,7 +26,7 @@ class QtHandler(logging.Handler):
 handler = QtHandler()
 handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
 logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 class XStream(QObject):
     _stdout = None
@@ -103,7 +103,9 @@ class MainWindow(QMainWindow):
         region_list = toolbox.getconfigvalue("STATIC", "regions").split(',')
         self.region_cb.addItems(region_list)
         
-        self.log_te = QTextEdit() 
+        self.log_te = QTextEdit()
+        self.log_te.setReadOnly(True)
+        self.log_te.setLineWrapMode(QTextEdit.NoWrap)
         
         self.file_menu = QMenu(u"Fichier")
         self.help_menu = QMenu(u"Aide")
@@ -236,7 +238,7 @@ class MainWindow(QMainWindow):
             self.start_button.setDisabled(True)
             self.stop_button.setEnabled(True)
             
-            logger.info(u"Début de la recherche d'annonces")
+            logger.info(u"Début")
             
             inde = self.inde_cb.isChecked()
             apec = self.apec_cb.isChecked()
@@ -255,11 +257,14 @@ class MainWindow(QMainWindow):
             excludelist = unidecode(toolbox.getconfigvalue("GENERAL", "excludes")).split(",")
             
             c = core.core(dbpath)
+            logger.info(u"Recherche d'annonces")
             c.found_annonce(searchkeyword, daterange, region, None, apec, caoe, inde, mons, pole, regi)
+            logger.info(u"Tri des annonces par rapport aux mots-clé d'exclusion")
             c.exclude_annouces(excludelist)
+            logger.info(u"Tri des annonces par rapport aux critères de filtrage")
             c.filter_announces(filterkeyword)
             
-            logger.info(u"Fin de la recherche d'annonces")
+            logger.info(u"Fin")
             
             self.stop_button.setDisabled(True)
             self.start_button.setEnabled(True)

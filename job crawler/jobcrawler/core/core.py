@@ -32,7 +32,7 @@ class core(object):
  
             except Exception as e:
                 logger.error("Error on link {0}".format(ad.link))
-                logger.error(e)
+                logger.debug(e)
                 
         db.merge()
         db.write()
@@ -56,7 +56,7 @@ class core(object):
  
             except Exception as e:
                 logger.error("Error on link {0}".format(ad.link))
-                logger.error(e)
+                logger.debug(e)
         
         db.merge()
         db.write()
@@ -65,16 +65,22 @@ class core(object):
         db = dbmanagement.database(self.dbpath)
         
         if apecc:
+            logger.info(u"Recherche d'annonce sur l'APEC")
             apec.ApecCrawler().run_program(keywords,daterange,region)
         if caoec:
+            logger.info(u"Recherche d'annonce sur CAO emploi")
             caoemploi.CaoemploiCrawler().run_program(region)
         if ic:
+            logger.info(u"Recherche d'annonce sur Indeed")
             indeed.IndeedCrawler(db).run(keywords,daterange,region)
         if mc:
+            logger.info(u"Recherche d'annonce sur Monster job")
             monster.MonsterCrawler().run_program(keywords,daterange,region)
         if poc:
+            logger.info(u"Recherche d'annonce sur Pôle emploi")
             poleemploi.PoleemploiCrawler().run_program(keywords,daterange,region)
         if rjc:
+            logger.info(u"Recherche d'annonce sur Région job")
             regionjob.RegionjobCrawler().run_program(domain,daterange,region)
         
         db.merge()
