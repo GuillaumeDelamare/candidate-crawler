@@ -239,7 +239,7 @@ class MainWindow(QMainWindow):
     def start(self):
         def run():
             self.start_button.setDisabled(True)
-            self.stop_button.setEnabled(True)
+#             self.stop_button.setEnabled(True)
             
             logger.info(u"Début")
             
@@ -269,7 +269,7 @@ class MainWindow(QMainWindow):
             
             logger.info(u"Fin")
             
-            self.stop_button.setDisabled(True)
+#             self.stop_button.setDisabled(True)
             self.start_button.setEnabled(True)
         
         if self.validate_fields() and self.validate_admin():
